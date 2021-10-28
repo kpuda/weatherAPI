@@ -2,6 +2,7 @@ package com.kp.weatherAPI.Controller;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
+import com.kp.weatherAPI.Entity.Properties;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
 import com.kp.weatherAPI.EntityAPI.Geometry;
@@ -39,9 +40,12 @@ public class WeatherController {
         httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36");
         System.out.println(httpConn.getContentType());
         InputStreamReader reader=new InputStreamReader(url.openStream());
-//        com.kp.weatherAPI.Entity.Weather weather=new Gson().fromJson(reader, Weather.class);
         weatherDb=new Gson().fromJson(reader, com.kp.weatherAPI.Entity.Weather.class);
-        System.out.println(weatherDb.toString());
+/*   com.kp.weatherAPI.Entity.Weather weather=new Gson().fromJson(reader, Weather.class);
+        List<Timeseries> timeseries=weatherDb.getProperties().getTimeseries().stream()
+                .collect(Collectors.toList());
+        System.out.println(timeseries);*/
+
         return weatherDb;
     }
     @GetMapping("/all")
@@ -49,10 +53,10 @@ public class WeatherController {
         List<Weather>weathers=weatherRepository.findAll();
         return weathers;
     }
+
     @PostMapping("/saveWeather")
     public void saveWeather(@RequestBody Weather weather){
-     weatherRepository.save(weather);
-        //weatherService.saveWeather(weatherDb);
+        weatherService.saveWeather(weatherDb);
     }
 
 }

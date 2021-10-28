@@ -31,7 +31,8 @@ public class Properties {
 
     @SerializedName("timeseries")
     @Expose
-    @Embedded
+    @OneToMany(mappedBy = "data",cascade = CascadeType.ALL)
+    //@JoinColumn(name = "timeseries_id",referencedColumnName = "timeseriesId")
     private List<Timeseries> timeseries=null;
 
 }

@@ -2,14 +2,13 @@
 package com.kp.weatherAPI.Entity;
 
 import javax.annotation.Generated;
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
+import javax.persistence.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
+@Entity
 @lombok.Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +16,9 @@ import lombok.NoArgsConstructor;
 @Generated("jsonschema2pojo")
 public class Data {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dataId;
     @SerializedName("instant")
     @Expose
     @Embedded

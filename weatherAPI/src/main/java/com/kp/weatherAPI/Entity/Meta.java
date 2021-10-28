@@ -27,8 +27,7 @@ public class Meta {
     @SerializedName("units")
     @Expose
     @Embedded
-/*    @OneToOne
-    @JoinColumn(name = "units_id",referencedColumnName = "unitsId")*/
+
     private Units units;
 
 }
