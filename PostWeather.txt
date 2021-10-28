@@ -1,0 +1,1544 @@
+{
+    "id": null,
+    "type": "Feature",
+    "geometry": {
+        "geometryId": 0,
+        "type": "Point",
+        "coordinates": [
+            19,
+            50,
+            241
+        ]
+    },
+    "properties": {
+        "propertiesId": null,
+        "meta": {
+            "metaId": null,
+            "updatedAt": "2021-10-28T13:21:34Z",
+            "units": {
+                "airPressureAtSeaLevel": "hPa",
+                "airTemperature": "celsius",
+                "cloudAreaFraction": "%",
+                "precipitationAmount": "mm",
+                "relativeHumidity": "%",
+                "windFromDirection": "degrees",
+                "windSpeed": "m/s"
+            }
+        },
+        "timeseries": [
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T16:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.6,
+                            "airTemperature": 9.2,
+                            "cloudAreaFraction": 4.7,
+                            "relativeHumidity": 78.7,
+                            "windFromDirection": 182.1,
+                            "windSpeed": 2.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T17:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.8,
+                            "airTemperature": 7.7,
+                            "cloudAreaFraction": 18.7,
+                            "relativeHumidity": 84.8,
+                            "windFromDirection": 176.4,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1025.0,
+                            "airTemperature": 6.1,
+                            "cloudAreaFraction": 21.9,
+                            "relativeHumidity": 89.2,
+                            "windFromDirection": 186.9,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T19:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.8,
+                            "airTemperature": 5.5,
+                            "cloudAreaFraction": 28.1,
+                            "relativeHumidity": 89.6,
+                            "windFromDirection": 208.4,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T20:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.6,
+                            "airTemperature": 5.3,
+                            "cloudAreaFraction": 42.2,
+                            "relativeHumidity": 88.9,
+                            "windFromDirection": 206.3,
+                            "windSpeed": 2.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T21:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.5,
+                            "airTemperature": 5.4,
+                            "cloudAreaFraction": 42.2,
+                            "relativeHumidity": 87.1,
+                            "windFromDirection": 195.1,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T22:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1024.2,
+                            "airTemperature": 5.1,
+                            "cloudAreaFraction": 34.4,
+                            "relativeHumidity": 87.8,
+                            "windFromDirection": 191.0,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-28T23:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1023.9,
+                            "airTemperature": 4.9,
+                            "cloudAreaFraction": 28.1,
+                            "relativeHumidity": 87.2,
+                            "windFromDirection": 193.2,
+                            "windSpeed": 2.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1023.5,
+                            "airTemperature": 4.9,
+                            "cloudAreaFraction": 1.6,
+                            "relativeHumidity": 85.0,
+                            "windFromDirection": 197.9,
+                            "windSpeed": 2.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T01:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1023.1,
+                            "airTemperature": 4.7,
+                            "cloudAreaFraction": 1.6,
+                            "relativeHumidity": 84.5,
+                            "windFromDirection": 197.0,
+                            "windSpeed": 2.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T02:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1022.7,
+                            "airTemperature": 4.3,
+                            "cloudAreaFraction": 2.3,
+                            "relativeHumidity": 85.4,
+                            "windFromDirection": 195.6,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T03:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1022.1,
+                            "airTemperature": 3.8,
+                            "cloudAreaFraction": 28.9,
+                            "relativeHumidity": 86.6,
+                            "windFromDirection": 189.3,
+                            "windSpeed": 1.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T04:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1022.1,
+                            "airTemperature": 3.6,
+                            "cloudAreaFraction": 18.0,
+                            "relativeHumidity": 86.1,
+                            "windFromDirection": 175.3,
+                            "windSpeed": 1.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T05:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1021.9,
+                            "airTemperature": 3.5,
+                            "cloudAreaFraction": 30.5,
+                            "relativeHumidity": 86.9,
+                            "windFromDirection": 152.0,
+                            "windSpeed": 1.5
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1021.9,
+                            "airTemperature": 3.9,
+                            "cloudAreaFraction": 10.2,
+                            "relativeHumidity": 86.1,
+                            "windFromDirection": 126.9,
+                            "windSpeed": 1.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T07:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1022.0,
+                            "airTemperature": 5.8,
+                            "cloudAreaFraction": 30.5,
+                            "relativeHumidity": 80.0,
+                            "windFromDirection": 109.3,
+                            "windSpeed": 1.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T08:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1021.9,
+                            "airTemperature": 7.7,
+                            "cloudAreaFraction": 37.5,
+                            "relativeHumidity": 74.2,
+                            "windFromDirection": 94.9,
+                            "windSpeed": 1.5
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T09:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1021.7,
+                            "airTemperature": 9.8,
+                            "cloudAreaFraction": 21.1,
+                            "relativeHumidity": 66.1,
+                            "windFromDirection": 83.2,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T10:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1021.2,
+                            "airTemperature": 12.2,
+                            "cloudAreaFraction": 22.7,
+                            "relativeHumidity": 56.8,
+                            "windFromDirection": 61.5,
+                            "windSpeed": 1.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T11:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1020.7,
+                            "airTemperature": 13.9,
+                            "cloudAreaFraction": 29.7,
+                            "relativeHumidity": 52.8,
+                            "windFromDirection": 55.1,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1020.1,
+                            "airTemperature": 15.0,
+                            "cloudAreaFraction": 32.8,
+                            "relativeHumidity": 52.4,
+                            "windFromDirection": 72.9,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T13:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.6,
+                            "airTemperature": 15.5,
+                            "cloudAreaFraction": 36.7,
+                            "relativeHumidity": 55.4,
+                            "windFromDirection": 131.9,
+                            "windSpeed": 0.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T14:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.4,
+                            "airTemperature": 14.9,
+                            "cloudAreaFraction": 52.3,
+                            "relativeHumidity": 71.2,
+                            "windFromDirection": 185.6,
+                            "windSpeed": 0.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T15:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.3,
+                            "airTemperature": 13.7,
+                            "cloudAreaFraction": 67.2,
+                            "relativeHumidity": 57.9,
+                            "windFromDirection": 208.0,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T16:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.1,
+                            "airTemperature": 13.4,
+                            "cloudAreaFraction": 64.8,
+                            "relativeHumidity": 51.6,
+                            "windFromDirection": 188.8,
+                            "windSpeed": 1.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T17:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.0,
+                            "airTemperature": 8.3,
+                            "cloudAreaFraction": 60.9,
+                            "relativeHumidity": 70.0,
+                            "windFromDirection": 162.6,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.2,
+                            "airTemperature": 6.3,
+                            "cloudAreaFraction": 67.2,
+                            "relativeHumidity": 75.4,
+                            "windFromDirection": 163.5,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T19:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.4,
+                            "airTemperature": 5.2,
+                            "cloudAreaFraction": 72.7,
+                            "relativeHumidity": 79.6,
+                            "windFromDirection": 187.9,
+                            "windSpeed": 1.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T20:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.6,
+                            "airTemperature": 4.7,
+                            "cloudAreaFraction": 71.9,
+                            "relativeHumidity": 83.4,
+                            "windFromDirection": 197.0,
+                            "windSpeed": 1.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T21:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.7,
+                            "airTemperature": 4.3,
+                            "cloudAreaFraction": 72.7,
+                            "relativeHumidity": 83.4,
+                            "windFromDirection": 182.2,
+                            "windSpeed": 1.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T22:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.6,
+                            "airTemperature": 3.8,
+                            "cloudAreaFraction": 76.6,
+                            "relativeHumidity": 84.2,
+                            "windFromDirection": 166.1,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-29T23:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.4,
+                            "airTemperature": 3.8,
+                            "cloudAreaFraction": 56.2,
+                            "relativeHumidity": 80.8,
+                            "windFromDirection": 145.2,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.2,
+                            "airTemperature": 4.1,
+                            "cloudAreaFraction": 32.0,
+                            "relativeHumidity": 77.4,
+                            "windFromDirection": 124.7,
+                            "windSpeed": 1.5
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T01:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.9,
+                            "airTemperature": 3.4,
+                            "cloudAreaFraction": 23.4,
+                            "relativeHumidity": 79.3,
+                            "windFromDirection": 94.8,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T02:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.5,
+                            "airTemperature": 2.9,
+                            "cloudAreaFraction": 10.2,
+                            "relativeHumidity": 80.9,
+                            "windFromDirection": 64.6,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T03:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.4,
+                            "airTemperature": 2.6,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 81.7,
+                            "windFromDirection": 45.9,
+                            "windSpeed": 1.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T04:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.5,
+                            "airTemperature": 3.6,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 78.0,
+                            "windFromDirection": 58.2,
+                            "windSpeed": 0.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T05:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.5,
+                            "airTemperature": 3.3,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 81.1,
+                            "windFromDirection": 92.0,
+                            "windSpeed": 1.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.8,
+                            "airTemperature": 3.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 84.7,
+                            "windFromDirection": 111.8,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T07:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.2,
+                            "airTemperature": 5.4,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 80.6,
+                            "windFromDirection": 103.3,
+                            "windSpeed": 0.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T08:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.4,
+                            "airTemperature": 9.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 79.0,
+                            "windFromDirection": 126.0,
+                            "windSpeed": 0.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T09:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.2,
+                            "airTemperature": 12.2,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 59.0,
+                            "windFromDirection": 10.7,
+                            "windSpeed": 1.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T10:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.0,
+                            "airTemperature": 13.7,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 55.3,
+                            "windFromDirection": 42.9,
+                            "windSpeed": 1.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T11:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.7,
+                            "airTemperature": 15.0,
+                            "cloudAreaFraction": 0.8,
+                            "relativeHumidity": 56.0,
+                            "windFromDirection": 167.6,
+                            "windSpeed": 1.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1018.3,
+                            "airTemperature": 16.0,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 54.2,
+                            "windFromDirection": 189.4,
+                            "windSpeed": 2.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T13:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.9,
+                            "airTemperature": 16.2,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 52.7,
+                            "windFromDirection": 180.9,
+                            "windSpeed": 2.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T14:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.6,
+                            "airTemperature": 15.4,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 58.7,
+                            "windFromDirection": 162.9,
+                            "windSpeed": 2.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T15:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.3,
+                            "airTemperature": 11.5,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 69.3,
+                            "windFromDirection": 137.9,
+                            "windSpeed": 2.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T16:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.2,
+                            "airTemperature": 8.6,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 76.3,
+                            "windFromDirection": 97.4,
+                            "windSpeed": 3.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T17:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.4,
+                            "airTemperature": 7.9,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 78.3,
+                            "windFromDirection": 41.4,
+                            "windSpeed": 1.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.5,
+                            "airTemperature": 6.2,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 85.7,
+                            "windFromDirection": 41.2,
+                            "windSpeed": 1.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T19:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.5,
+                            "airTemperature": 6.5,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 83.4,
+                            "windFromDirection": 55.4,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T20:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.4,
+                            "airTemperature": 5.8,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 87.6,
+                            "windFromDirection": 114.5,
+                            "windSpeed": 0.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T21:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.4,
+                            "airTemperature": 5.5,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 88.1,
+                            "windFromDirection": 71.0,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T22:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.5,
+                            "airTemperature": 6.4,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 79.2,
+                            "windFromDirection": 346.7,
+                            "windSpeed": 0.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-30T23:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.5,
+                            "airTemperature": 6.3,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 77.6,
+                            "windFromDirection": 287.2,
+                            "windSpeed": 2.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.4,
+                            "airTemperature": 6.4,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 78.4,
+                            "windFromDirection": 254.5,
+                            "windSpeed": 2.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T01:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1017.2,
+                            "airTemperature": 7.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 77.9,
+                            "windFromDirection": 180.1,
+                            "windSpeed": 0.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T02:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1016.5,
+                            "airTemperature": 4.4,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 89.4,
+                            "windFromDirection": 80.9,
+                            "windSpeed": 0.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T03:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1016.0,
+                            "airTemperature": 3.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 92.0,
+                            "windFromDirection": 47.9,
+                            "windSpeed": 0.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T04:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1016.0,
+                            "airTemperature": 3.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 90.0,
+                            "windFromDirection": 32.7,
+                            "windSpeed": 0.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T05:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1016.1,
+                            "airTemperature": 2.6,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 90.8,
+                            "windFromDirection": 54.7,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1016.3,
+                            "airTemperature": 2.3,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 93.0,
+                            "windFromDirection": 57.1,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1013.4,
+                            "airTemperature": 16.5,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 53.7,
+                            "windFromDirection": 220.6,
+                            "windSpeed": 3.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-10-31T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1011.6,
+                            "airTemperature": 9.4,
+                            "cloudAreaFraction": 53.1,
+                            "relativeHumidity": 73.1,
+                            "windFromDirection": 39.3,
+                            "windSpeed": 1.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-01T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1008.8,
+                            "airTemperature": 6.2,
+                            "cloudAreaFraction": 93.0,
+                            "relativeHumidity": 83.8,
+                            "windFromDirection": 65.8,
+                            "windSpeed": 1.2
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-01T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1006.8,
+                            "airTemperature": 9.6,
+                            "cloudAreaFraction": 14.1,
+                            "relativeHumidity": 67.8,
+                            "windFromDirection": 202.9,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-01T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1003.9,
+                            "airTemperature": 15.8,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 60.0,
+                            "windFromDirection": 222.6,
+                            "windSpeed": 5.1
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-01T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1000.5,
+                            "airTemperature": 9.8,
+                            "cloudAreaFraction": 67.2,
+                            "relativeHumidity": 86.0,
+                            "windFromDirection": 93.5,
+                            "windSpeed": 1.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-02T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 995.5,
+                            "airTemperature": 10.4,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 79.8,
+                            "windFromDirection": 95.2,
+                            "windSpeed": 3.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-02T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 993.3,
+                            "airTemperature": 9.0,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 92.8,
+                            "windFromDirection": 292.6,
+                            "windSpeed": 4.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-02T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 997.7,
+                            "airTemperature": 7.9,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 92.1,
+                            "windFromDirection": 224.2,
+                            "windSpeed": 5.5
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-02T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1001.7,
+                            "airTemperature": 8.8,
+                            "cloudAreaFraction": 91.4,
+                            "relativeHumidity": 73.1,
+                            "windFromDirection": 224.0,
+                            "windSpeed": 6.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-03T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1005.3,
+                            "airTemperature": 8.1,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 67.0,
+                            "windFromDirection": 222.8,
+                            "windSpeed": 7.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-03T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1006.6,
+                            "airTemperature": 6.6,
+                            "cloudAreaFraction": 23.4,
+                            "relativeHumidity": 78.4,
+                            "windFromDirection": 213.5,
+                            "windSpeed": 4.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-03T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1005.2,
+                            "airTemperature": 14.8,
+                            "cloudAreaFraction": 94.5,
+                            "relativeHumidity": 62.3,
+                            "windFromDirection": 199.6,
+                            "windSpeed": 5.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-03T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1004.1,
+                            "airTemperature": 8.3,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 86.6,
+                            "windFromDirection": 69.6,
+                            "windSpeed": 1.9
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-04T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1001.5,
+                            "airTemperature": 9.7,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 87.2,
+                            "windFromDirection": 99.2,
+                            "windSpeed": 3.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-04T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 996.5,
+                            "airTemperature": 13.7,
+                            "cloudAreaFraction": 89.1,
+                            "relativeHumidity": 75.0,
+                            "windFromDirection": 203.0,
+                            "windSpeed": 8.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-04T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1004.9,
+                            "airTemperature": 12.5,
+                            "cloudAreaFraction": 99.2,
+                            "relativeHumidity": 61.3,
+                            "windFromDirection": 244.8,
+                            "windSpeed": 10.8
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-04T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1015.1,
+                            "airTemperature": 7.5,
+                            "cloudAreaFraction": 100.0,
+                            "relativeHumidity": 85.9,
+                            "windFromDirection": 236.3,
+                            "windSpeed": 4.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-05T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1019.6,
+                            "airTemperature": 5.2,
+                            "cloudAreaFraction": 4.7,
+                            "relativeHumidity": 93.3,
+                            "windFromDirection": 235.4,
+                            "windSpeed": 4.5
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-05T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1023.0,
+                            "airTemperature": 4.6,
+                            "cloudAreaFraction": 21.9,
+                            "relativeHumidity": 92.8,
+                            "windFromDirection": 241.4,
+                            "windSpeed": 4.4
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-05T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1025.9,
+                            "airTemperature": 8.7,
+                            "cloudAreaFraction": 95.3,
+                            "relativeHumidity": 73.4,
+                            "windFromDirection": 272.8,
+                            "windSpeed": 4.0
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-05T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1028.6,
+                            "airTemperature": 5.4,
+                            "cloudAreaFraction": 98.4,
+                            "relativeHumidity": 88.7,
+                            "windFromDirection": 235.3,
+                            "windSpeed": 1.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-06T00:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1030.8,
+                            "airTemperature": 3.3,
+                            "cloudAreaFraction": 14.8,
+                            "relativeHumidity": 92.9,
+                            "windFromDirection": 239.1,
+                            "windSpeed": 2.7
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-06T06:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1031.6,
+                            "airTemperature": 1.8,
+                            "cloudAreaFraction": 18.7,
+                            "relativeHumidity": 90.1,
+                            "windFromDirection": 235.9,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-06T12:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1030.5,
+                            "airTemperature": 9.0,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 59.2,
+                            "windFromDirection": 234.7,
+                            "windSpeed": 2.6
+                        }
+                    }
+                }
+            },
+            {
+                "timeseriesId": null,
+                "time": "2021-11-06T18:00:00Z",
+                "data": {
+                    "dataId": null,
+                    "instant": {
+                        "details": {
+                            "airPressureAtSeaLevel": 1028.6,
+                            "airTemperature": 2.0,
+                            "cloudAreaFraction": 0.0,
+                            "relativeHumidity": 91.4,
+                            "windFromDirection": 142.5,
+                            "windSpeed": 2.3
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
