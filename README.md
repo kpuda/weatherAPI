@@ -1,7 +1,7 @@
 # weatherAPI
 Database used - MySql.<br><br>
-Postman package collection in folder above.
-JSON test files
+Postman package collection and JSON test files in folder above.
+
 
 # Available endpoints:
 
