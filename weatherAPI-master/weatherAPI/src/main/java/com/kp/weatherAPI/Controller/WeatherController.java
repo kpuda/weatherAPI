@@ -2,6 +2,7 @@ package com.kp.weatherAPI.Controller;
 
 import com.google.gson.Gson;
 
+import com.kp.weatherAPI.Entity.Geometry;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
 import com.kp.weatherAPI.Service.GeometryService;
@@ -25,7 +26,6 @@ public class WeatherController {
     private WeatherService weatherService;
     private GeometryService geometryService;
     private TimeseriesService timeseriesService;
-    //Weather weatherDb;
 
     @Autowired
     public WeatherController(WeatherService weatherService, GeometryService geometryService, TimeseriesService timeseriesService) {
@@ -79,18 +79,37 @@ public class WeatherController {
     }
 
     // PUT SECTION
-    @PutMapping("/update")
+    @PutMapping("/update") // dla pojedynczych miejsc
     public ResponseEntity<Weather> updateWeather(@RequestParam Double lat, @RequestParam Double lon) throws IOException {
         if (geometryService.getGeometryId(lat,lon)!=-1) {
-            Weather temp = newOrder(lat, lon);
+            /*Weather temp = newOrder(lat, lon); DRY
             Weather weather = (weatherService.fetchByGeoId(geometryService.getGeometryId(lat, lon))).get(0);
             List<Timeseries> newList = timeseriesService.updateWeather(weather.getProperties().getTimeseries(), temp.getProperties().getTimeseries());
             newList.sort(Timeseries::compareTo);
-            weather.getProperties().setTimeseries(newList);
-            weatherService.saveWeather(weather);
-            return ResponseEntity.ok(weather);
+            weather.getProperties().setTimeseries(newList);*/
+            weatherService.saveWeather(compareTimeseriesData(lat,lon));
+            return ResponseEntity.ok(compareTimeseriesData(lat,lon));
         } else {
             return null;
+        }
+    }
+
+    @PutMapping("/updateAllLocations") // dla wszystkich  miejsc
+    public void updateWeatherEverwhere() throws IOException {
+        List<Geometry> geometryList=geometryService.getGeometryList();
+        Weather temp;
+        Weather weather;
+        for (Geometry geometry : geometryList) {
+            /* for (int i=0;i<geometryList.size();i++)
+            temp=newOrder(geometryList.get(i).getCoordinates().get(1),geometryList.get(i).getCoordinates().get(0));
+           weather=(weatherService.fetchByGeoId(geometryService.getGeometryId(geometryList.get(i).getCoordinates().get(1),geometryList.get(i).getCoordinates().get(0)))).get(0);
+           List<Timeseries> newList= timeseriesService.updateWeather(weather.getProperties().getTimeseries(),temp.getProperties().getTimeseries());
+            newList.sort(Timeseries::compareTo);
+            weather.getProperties().setTimeseries(newList);*/
+            weatherService.saveWeather(
+                    compareTimeseriesData(
+                            geometry.getCoordinates().get(1), geometry.getCoordinates().get(0)
+                    ));
         }
     }
 
@@ -102,5 +121,14 @@ public class WeatherController {
         return "Deleted location";
         } else
             return "Could not delete location. Either it doesn't exist in database or internal error happened";
+    }
+
+    private Weather compareTimeseriesData(Double lat, Double lon) throws IOException {
+        Weather temp=newOrder(lat,lon);
+        Weather weather = (weatherService.fetchByGeoId(geometryService.getGeometryId(lat, lon))).get(0);
+        List<Timeseries> newList = timeseriesService.updateWeather(weather.getProperties().getTimeseries(), temp.getProperties().getTimeseries());
+        newList.sort(Timeseries::compareTo);
+        weather.getProperties().setTimeseries(newList);
+        return weather;
     }
 }
