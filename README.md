@@ -1,5 +1,5 @@
 # weatherAPI
-Database used - MySql.
+Database used - MySql.<br><br>
 Postman package collection in folder above.
 JSON test files
 
