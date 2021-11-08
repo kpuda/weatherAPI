@@ -12,7 +12,6 @@ Postman package collection and JSON test files in folder above.
 # <b>-POST<br>
 /saveWeather<br>  @RequestBody Weather provided in json format.<br><br>
 # <b>-PUT</b><br>
-/update<br> eg. update?lat=49.6&lon=19.96 - updates weather info for given location,<br><br>
-/updateAllLocations - updates weather info for every location stored in database.<br><br>
+/update<br> updates weather info for every location stored in database.<br><br>
 # <b>-DELETE</b><br>
 /deleteLocationByGeo<br> eg. /deleteLocationByGeo?lat=30&lon=1 - deletes everything associated with this location from database.<br>
