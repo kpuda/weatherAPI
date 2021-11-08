@@ -8,7 +8,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-//@Entity
 @lombok.Data
 @AllArgsConstructor
 @NoArgsConstructor

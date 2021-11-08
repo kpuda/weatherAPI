@@ -2,6 +2,7 @@ package com.kp.weatherAPI.Service;
 
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
+import com.kp.weatherAPI.Exceptions.WeatherAlreadyExistsException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,25 +12,27 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    private WeatherRepository weatherRepository;
+    private final WeatherRepository weatherRepository;
+    private final GeometryService geometryService;
 
-    @Autowired
-    public WeatherService(WeatherRepository weatherRepository) {
+    public WeatherService(WeatherRepository weatherRepository, GeometryService geometryService) {
         this.weatherRepository = weatherRepository;
+        this.geometryService = geometryService;
     }
 
-    public void saveWeather(Weather weather){
+    public void saveWeather(Weather weather) {
         weatherRepository.save(weather);
     }
 
-    public List<Weather> fetchAll(){return weatherRepository.findAll();}
+    public List<Weather> fetchAll() {
+        return weatherRepository.findAll();
+    }
 
-    public List<Weather> fetchByGeoId(Long id) {
-        List<Weather> temp=weatherRepository.findWeatherByGeoId(id);
-        List<Timeseries> timeseries = temp.get(0).getProperties().getTimeseries();
-        timeseries.sort(Timeseries::compareTo);
-        temp.get(0).getProperties().setTimeseries(timeseries);
-        return temp;}
+    public Weather fetchWeatherByGeometryId(Long id) {
+        return weatherRepository.findWeatherByGeoId(id);
+    }
 
-    public void deleteWeatherById(Long id) { weatherRepository.deleteById(id);}
+    public void deleteWeatherById(Long id) {
+        weatherRepository.deleteById(id);
+    }
 }

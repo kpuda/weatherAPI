@@ -26,13 +26,14 @@ public class Properties {
     @SerializedName("meta")
     @Expose
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "meta_id",referencedColumnName = "metaId")
+    @JoinColumn(name = "meta_id", referencedColumnName = "metaId")
     private Meta meta;
 
     @SerializedName("timeseries")
     @Expose
-    @OneToMany(targetEntity = Timeseries.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "properties_id",referencedColumnName = "propertiesId")
-    private List<Timeseries> timeseries=null;
+    @OneToMany(targetEntity = Timeseries.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "properties_id", referencedColumnName = "propertiesId")
+    private List<Timeseries> timeseries = null;
+
 
 }

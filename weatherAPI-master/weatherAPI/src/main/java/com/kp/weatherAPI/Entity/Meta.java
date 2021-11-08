@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Generated("jsonschema2pojo")
 public class Meta {
 
     @Id

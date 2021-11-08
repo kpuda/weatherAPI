@@ -1,134 +1,120 @@
 package com.kp.weatherAPI.Controller;
 
 import com.google.gson.Gson;
-
 import com.kp.weatherAPI.Entity.Geometry;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
+import com.kp.weatherAPI.Exceptions.WeatherAlreadyExistsException;
+import com.kp.weatherAPI.Exceptions.WeatherFetchException;
+import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
 import com.kp.weatherAPI.Service.GeometryService;
 import com.kp.weatherAPI.Service.TimeseriesService;
 import com.kp.weatherAPI.Service.WeatherService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 
-@RestController("/")
+@RestController()
 public class WeatherController {
 
-    private WeatherService weatherService;
-    private GeometryService geometryService;
-    private TimeseriesService timeseriesService;
+    RestTemplate restTemplate = new RestTemplate();
 
-    @Autowired
+    private final WeatherService weatherService;
+    private final GeometryService geometryService;
+    private final TimeseriesService timeseriesService;
+    private final HttpHeaders httpHeaders = new HttpHeaders();
+    private final HttpEntity<String> httpEntity = new HttpEntity<String>(httpHeaders);
+    private final String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
+    private final String USER_AGENT = "user-agent";
+    private final String USER_AGENT_URL = "Mozilla/5.0 Firefox/26.0";
+
     public WeatherController(WeatherService weatherService, GeometryService geometryService, TimeseriesService timeseriesService) {
         this.weatherService = weatherService;
         this.geometryService = geometryService;
         this.timeseriesService = timeseriesService;
     }
 
-
-    //GET SECTION
-    @GetMapping("/new") // new?lat=50&lon=19
-    public com.kp.weatherAPI.Entity.Weather newOrder(@RequestParam Double lat, @RequestParam Double lon) throws IOException {
-        URL url=new URL("https://api.met.no/weatherapi/locationforecast/2.0/compact?lat="+lat+"&lon="+lon);
-        HttpURLConnection httpConn= (HttpURLConnection) url.openConnection();
-        httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36");
-        httpConn.getContentType(); //dlaczego bez tego mam 403?
-
-        InputStreamReader reader=new InputStreamReader(url.openStream());
-        Weather weather=new Gson().fromJson(reader, com.kp.weatherAPI.Entity.Weather.class);
-        List<Timeseries> t=weather.getProperties().getTimeseries();
-        t.sort(Timeseries::compareTo);
-        weather.getProperties().setTimeseries(t);
+    @GetMapping("/new")
+    Weather newOrder(@RequestParam Double lat, @RequestParam Double lon) throws IOException {
+        /*httpHeaders.set(USER_AGENT, USER_AGENT_URL);
+         String url = WEATHER_API_URL + lat + "&lon=" + lon;
+        ResponseEntity<Weather> weather = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Weather.class);
+        System.out.println(weather.getBody());*/
+        // resttemplate doesnt work so far
+        URL url = new URL(WEATHER_API_URL + lat + "&lon=" + lon);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestProperty(USER_AGENT, USER_AGENT_URL);
+        httpConn.getContentType();
+        InputStreamReader reader = new InputStreamReader(url.openStream());
+        Weather weather = new Gson().fromJson(reader, com.kp.weatherAPI.Entity.Weather.class);
+        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
+        timeseries.sort(Timeseries::compareTo);
+        weather.getProperties().setTimeseries(timeseries);
         return weather;
     }
 
     @GetMapping("/all")
-    public List<Weather> showAll(){
-        return weatherService.fetchAll();
+    public List<Weather> showAll() {
+        return Optional.ofNullable(
+                weatherService.fetchAll())
+                .orElseThrow(()->new WeatherFetchException());
     }
 
     @GetMapping("/byGeo")
-    public List<Weather> weatherByGeo(@RequestParam Double lat, @RequestParam Double lon)  {
-        if (geometryService.getGeometryId(lat,lon)!=-1){
-            Long id=geometryService.getGeometryId(lat,lon);
-            return weatherService.fetchByGeoId(id);
-        } else
-            return null;
+    public Weather weatherByGeo(@RequestParam Double lat, @RequestParam Double lon) {
+        return Optional.ofNullable(
+                        weatherService.fetchWeatherByGeometryId(geometryService.getGeometryId(lat, lon)))
+                .orElseThrow(() -> new WeatherNotFoundException(lat, lon));
     }
 
-    // POST SECTION
+    @Transactional
     @PostMapping("/saveWeather")
-    public String saveWeather(@RequestBody Weather weather) {
+    public Weather saveWeather(@RequestBody Weather weather) {
         if (geometryService.getGeometryId(
-                        weather.getGeometry().getCoordinates().get(1),
-                        weather.getGeometry().getCoordinates().get(0) ) == -1 ) {
-            weatherService.saveWeather(weather);
-            return "Saved new location";
-        } else {
-            return "Can't save this location. Location already in database";
+                weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0))!=-1){
+            throw new WeatherAlreadyExistsException();
         }
+        weatherService.saveWeather(weather);
+        return weather;
     }
 
-    // PUT SECTION
-    @PutMapping("/update") // dla pojedynczych miejsc
-    public ResponseEntity<Weather> updateWeather(@RequestParam Double lat, @RequestParam Double lon) throws IOException {
-        if (geometryService.getGeometryId(lat,lon)!=-1) {
-            /*Weather temp = newOrder(lat, lon); DRY
-            Weather weather = (weatherService.fetchByGeoId(geometryService.getGeometryId(lat, lon))).get(0);
-            List<Timeseries> newList = timeseriesService.updateWeather(weather.getProperties().getTimeseries(), temp.getProperties().getTimeseries());
-            newList.sort(Timeseries::compareTo);
-            weather.getProperties().setTimeseries(newList);*/
-            weatherService.saveWeather(compareTimeseriesData(lat,lon));
-            return ResponseEntity.ok(compareTimeseriesData(lat,lon));
-        } else {
-            return null;
-        }
-    }
-
-    @PutMapping("/updateAllLocations") // dla wszystkich  miejsc
+    @Scheduled(fixedRateString = "PT30M")
+    @Transactional
+    @PutMapping("/update")
     public void updateWeatherEverwhere() throws IOException {
-        List<Geometry> geometryList=geometryService.getGeometryList();
-        Weather temp;
-        Weather weather;
-        for (Geometry geometry : geometryList) {
-            /* for (int i=0;i<geometryList.size();i++)
-            temp=newOrder(geometryList.get(i).getCoordinates().get(1),geometryList.get(i).getCoordinates().get(0));
-           weather=(weatherService.fetchByGeoId(geometryService.getGeometryId(geometryList.get(i).getCoordinates().get(1),geometryList.get(i).getCoordinates().get(0)))).get(0);
-           List<Timeseries> newList= timeseriesService.updateWeather(weather.getProperties().getTimeseries(),temp.getProperties().getTimeseries());
-            newList.sort(Timeseries::compareTo);
-            weather.getProperties().setTimeseries(newList);*/
+        List<Geometry> geometryList = geometryService.getGeometryList();
+        for (Geometry geometry : geometryList)
             weatherService.saveWeather(
                     compareTimeseriesData(
                             geometry.getCoordinates().get(1), geometry.getCoordinates().get(0)
                     ));
-        }
     }
 
-    // DELETE SECTION
-    @DeleteMapping("/deleteLocationByGeo") // deleteLocationByGeo?lat=30&lon=1
-    public String deleteLocationByGeo(@RequestParam Double lat, @RequestParam Double lon) {
-        if (geometryService.getGeometryId(lat,lon)!=-1){
-            weatherService.deleteWeatherById(geometryService.getGeometryId(lat,lon));
-        return "Deleted location";
-        } else
-            return "Could not delete location. Either it doesn't exist in database or internal error happened";
+    @DeleteMapping("/deleteLocationByGeo")
+    public void deleteLocationByGeo(@RequestParam Double lat, @RequestParam Double lon) {
+        if (geometryService.getGeometryId(lat,lon)==-1){
+            throw new WeatherNotFoundException(lat,lon);
+        }
+        weatherService.deleteWeatherById(geometryService.getGeometryId(lat, lon));
     }
 
     private Weather compareTimeseriesData(Double lat, Double lon) throws IOException {
-        Weather temp=newOrder(lat,lon);
-        Weather weather = (weatherService.fetchByGeoId(geometryService.getGeometryId(lat, lon))).get(0);
-        List<Timeseries> newList = timeseriesService.updateWeather(weather.getProperties().getTimeseries(), temp.getProperties().getTimeseries());
-        newList.sort(Timeseries::compareTo);
-        weather.getProperties().setTimeseries(newList);
-        return weather;
+        Weather refreshedWeatherData = newOrder(lat, lon);
+        Weather oldWeatherData = (weatherService.fetchWeatherByGeometryId(geometryService.getGeometryId(lat, lon)));
+        List<Timeseries> newTimeseriesList = timeseriesService.updateWeather(oldWeatherData.getProperties().getTimeseries(), refreshedWeatherData.getProperties().getTimeseries());
+        newTimeseriesList.sort(Timeseries::compareTo);
+        oldWeatherData.getProperties().setTimeseries(newTimeseriesList);
+        return oldWeatherData;
     }
 }

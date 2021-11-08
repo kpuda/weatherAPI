@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-@Generated("jsonschema2pojo")
 public class Units {
 
     @SerializedName("air_pressure_at_sea_level")

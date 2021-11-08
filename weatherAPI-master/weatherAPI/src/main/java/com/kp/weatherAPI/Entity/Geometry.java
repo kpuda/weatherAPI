@@ -28,6 +28,7 @@ public class Geometry {
     @SerializedName("coordinates")
     @Expose
     @ElementCollection
+    @Column(unique = true)
     private List<Double> coordinates = null;
 
 

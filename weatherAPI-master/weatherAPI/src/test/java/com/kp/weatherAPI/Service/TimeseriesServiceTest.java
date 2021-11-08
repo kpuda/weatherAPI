@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,18 +19,5 @@ class TimeseriesServiceTest {
     @Autowired
     TimeseriesService timeseriesService;
 
-    @Test
-    public void fetchData(){
-        List<Timeseries> timeseriesList=timeseriesService.fetchAllTimeseries();
-        System.out.println(timeseriesList.toString());
-    }
-    @Test
-    public void fetchDataByPropertiesId(){
-        List<Timeseries> timeseriesList=timeseriesService.fetchTimeseriesByPropertiesId(1L);
-        System.out.println(timeseriesList.toString());
-    }
-    @Test
-    public void showId(){
-        timeseriesService.fetchTimeSeriesByLatLonGeo(50.0,19.0);
-    }
+
 }

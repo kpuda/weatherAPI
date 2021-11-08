@@ -13,5 +13,5 @@ public interface WeatherRepository extends JpaRepository<Weather,Long> {
             value = "select * from weather where geometry_id=?;",
             nativeQuery = true
     )
-    List<Weather> findWeatherByGeoId(Long id);
+    Weather findWeatherByGeoId(Long id);
 }

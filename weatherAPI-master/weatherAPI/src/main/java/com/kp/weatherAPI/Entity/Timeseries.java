@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Generated("jsonschema2pojo")
-public class Timeseries implements Comparable<Timeseries>{
+public class Timeseries implements Comparable<Timeseries> {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long timeseriesId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long timeseriesId;
 
     @SerializedName("time")
     @Expose
