@@ -27,8 +27,8 @@ public class TimeseriesService {
                 Stream.of(oldList, newData)
                         .flatMap(List::stream)
                         .collect(Collectors.toMap(Timeseries::getTime,
-                                timeseries1 -> timeseries1,
-                                (Timeseries x, Timeseries y) -> x == null ? y : x))
+                                timeseriesData -> timeseriesData,
+                                (Timeseries oldTimeseries, Timeseries newtTimeseries) -> oldTimeseries == null ? newtTimeseries : oldTimeseries))
                         .values());
         timeseries.sort(Timeseries::compareTo);
         timeseries.forEach(timeseriesList -> {
