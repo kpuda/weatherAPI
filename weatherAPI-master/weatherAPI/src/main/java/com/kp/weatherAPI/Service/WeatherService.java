@@ -20,17 +20,13 @@ public class WeatherService {
         this.geometryService = geometryService;
     }
 
-    public void saveWeather(Weather weather) {
-        weatherRepository.save(weather);
-    }
+    public void saveWeather(Weather weather) {weatherRepository.save(weather);}
 
     public List<Weather> fetchAll() {
         return weatherRepository.findAll();
     }
 
-    public Weather fetchWeatherByGeometryId(Long id) {
-        return weatherRepository.findWeatherByGeoId(id);
-    }
+    public Weather fetchWeatherByGeometryId(Long id) {return weatherRepository.findWeatherByGeoId(id);}
 
     public void deleteWeatherById(Long id) {
         weatherRepository.deleteById(id);

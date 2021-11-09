@@ -9,11 +9,4 @@ import java.util.List;
 
 @Repository
 public interface TimeseriesRepository extends JpaRepository<Timeseries,Long> {
-
-    @Query(
-            value = "SELECT * FROM weather.timeseries where properties_id=?;",
-            nativeQuery = true
-    )
-    List<Timeseries> findAllByPropertiesId(Long id);
-
 }

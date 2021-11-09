@@ -23,7 +23,6 @@ public class Geometry {
 
     private String type;
 
-
     @ElementCollection
     @Column(unique = true)
     private List<Double> coordinates = null;

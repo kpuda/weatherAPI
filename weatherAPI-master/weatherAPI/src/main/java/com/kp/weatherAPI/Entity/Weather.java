@@ -22,7 +22,6 @@ public class Weather {
 
     private String type;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "geometry_id", referencedColumnName = "geometryId")
     private Geometry geometry;

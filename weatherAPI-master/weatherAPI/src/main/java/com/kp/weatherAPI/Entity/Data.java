@@ -17,8 +17,6 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {
 
-
     @Embedded
     private Instant instant;
-
 }

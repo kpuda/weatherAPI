@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Details {
 
-
     private Double airPressureAtSeaLevel;
 
     private Double airTemperature;

@@ -12,19 +12,13 @@ public class GeometryService {
 
     private final GeometryRepository geometryRepository;
 
-    public GeometryService(GeometryRepository geometryRepository) {
+    public GeometryService(GeometryRepository geometryRepository) { this.geometryRepository = geometryRepository;}
 
-        this.geometryRepository = geometryRepository;
-    }
-
-    public List<Geometry> getGeometryList() {
-
-        return geometryRepository.findAll();
-    }
+    public List<Geometry> getGeometryList() {return geometryRepository.findAll();}
 
     public Long getGeometryId(Double lat, Double lon) {
         List<Geometry> geometryList = getGeometryList();
-        long geoId = -1L;
+        Long geoId = null;
         for (Geometry geometry : geometryList) {
             if (geometry.getCoordinates().get(0).equals(lon) && geometry.getCoordinates().get(1).equals(lat)) {
                 geoId = geometry.getGeometryId();

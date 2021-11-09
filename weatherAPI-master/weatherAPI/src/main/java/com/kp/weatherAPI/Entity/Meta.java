@@ -23,9 +23,7 @@ public class Meta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long metaId;
 
-
     private String updatedAt;
-
 
     @Embedded
     private Units units;

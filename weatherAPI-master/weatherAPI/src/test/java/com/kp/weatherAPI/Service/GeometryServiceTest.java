@@ -13,12 +13,5 @@ import static org.junit.jupiter.api.Assertions.*;
 class GeometryServiceTest {
     @Autowired
     GeometryService geometryService;
-/*
 
-
-    @Test
-    public void getGeometries(){
-        //List<Geometry> geometryList=geometryService.getGeometryList();
-        System.out.println(geometryService.getGeometryList());
-    }*/
 }

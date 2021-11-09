@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Units {
 
-
     private String airPressureAtSeaLevel;
 
     private String airTemperature;

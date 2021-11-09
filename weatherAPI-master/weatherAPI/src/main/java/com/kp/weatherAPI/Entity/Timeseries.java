@@ -21,7 +21,6 @@ public class Timeseries implements Comparable<Timeseries> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long timeseriesId;
 
-
     private String time;
 
     @Embedded

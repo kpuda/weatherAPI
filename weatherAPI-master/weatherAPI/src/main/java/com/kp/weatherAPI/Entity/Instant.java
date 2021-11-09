@@ -17,10 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Embeddable
 public class Instant {
-
-
     @Embedded
     private Details details;
-
-
 }

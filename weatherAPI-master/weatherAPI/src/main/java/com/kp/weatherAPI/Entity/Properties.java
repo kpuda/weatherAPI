@@ -22,11 +22,9 @@ public class Properties {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long propertiesId;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "meta_id", referencedColumnName = "metaId")
     private Meta meta;
-
 
     @OneToMany(targetEntity = Timeseries.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "properties_id", referencedColumnName = "propertiesId")
