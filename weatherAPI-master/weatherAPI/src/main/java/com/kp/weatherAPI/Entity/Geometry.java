@@ -15,18 +15,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Generated("jsonschema2pojo")
 public class Geometry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long geometryId;
-    @SerializedName("type")
-    @Expose
+
     private String type;
 
-    @SerializedName("coordinates")
-    @Expose
+
     @ElementCollection
     @Column(unique = true)
     private List<Double> coordinates = null;

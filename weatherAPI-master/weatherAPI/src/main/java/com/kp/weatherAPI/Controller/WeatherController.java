@@ -1,5 +1,8 @@
 package com.kp.weatherAPI.Controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kp.weatherAPI.Entity.Geometry;
 import com.kp.weatherAPI.Entity.Timeseries;
@@ -21,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,23 +51,16 @@ public class WeatherController {
 
     @GetMapping("/new")
     Weather newOrder(@RequestParam Double lat, @RequestParam Double lon) throws IOException {
-        /*httpHeaders.set(USER_AGENT, USER_AGENT_URL);
-         String url = WEATHER_API_URL + lat + "&lon=" + lon;
-        ResponseEntity<Weather> weather = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Weather.class);
-        System.out.println(weather.getBody());*/
-        // resttemplate doesnt work so far
-        URL url = new URL(WEATHER_API_URL + lat + "&lon=" + lon);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        httpConn.setRequestProperty(USER_AGENT, USER_AGENT_URL);
-        httpConn.getContentType();
-        InputStreamReader reader = new InputStreamReader(url.openStream());
-        Weather weather = new Gson().fromJson(reader, com.kp.weatherAPI.Entity.Weather.class);
+        String url = WEATHER_API_URL + lat + "&lon=" + lon;
+        httpHeaders.set(USER_AGENT, url);
+        ResponseEntity<String> weatherResponse = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
+        ObjectMapper objectMapper=new ObjectMapper();
+        Weather weather=objectMapper.readValue(weatherResponse.getBody(),Weather.class);
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
         timeseries.sort(Timeseries::compareTo);
         weather.getProperties().setTimeseries(timeseries);
         return weather;
     }
-
     @GetMapping("/all")
     public List<Weather> showAll() {
         return Optional.ofNullable(
@@ -94,13 +91,17 @@ public class WeatherController {
     @PutMapping("/update")
     public void updateWeatherEverwhere() throws IOException {
         List<Geometry> geometryList = geometryService.getGeometryList();
-        for (Geometry geometry : geometryList)
+        if (geometryList.size()==0){
+            throw new WeatherFetchException();
+        }
+        for (Geometry geometry : geometryList) {
             weatherService.saveWeather(
                     compareTimeseriesData(
                             geometry.getCoordinates().get(1), geometry.getCoordinates().get(0)
                     ));
+        }
+        System.out.println(new Date());
     }
-
     @DeleteMapping("/deleteLocationByGeo")
     public void deleteLocationByGeo(@RequestParam Double lat, @RequestParam Double lon) {
         if (geometryService.getGeometryId(lat,lon)==-1){
@@ -117,4 +118,5 @@ public class WeatherController {
         oldWeatherData.getProperties().setTimeseries(newTimeseriesList);
         return oldWeatherData;
     }
+
 }

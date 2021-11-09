@@ -30,11 +30,15 @@ public class TimeseriesService {
                                 timeseries1 -> timeseries1,
                                 (Timeseries x, Timeseries y) -> x == null ? y : x))
                         .values());
-
+        timeseries.sort(Timeseries::compareTo);
         timeseries.forEach(timeseriesList -> {
-            newData.stream()
-                    .filter(timeseriesNewData -> timeseriesNewData.getTime().equals(timeseriesList.getTime()))
-                    .forEach(timeseriesNewData -> timeseriesList.setData(timeseriesNewData.getData()));
+            for (Timeseries timeseriesNewData : newData) {
+                if (!timeseriesNewData.getTime().equals(timeseriesList.getTime())) {
+                    continue;
+                }
+                timeseriesList.setData(timeseriesNewData.getData());
+
+            }
         });
         return timeseries;
     }

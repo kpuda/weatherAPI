@@ -16,21 +16,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Generated("jsonschema2pojo")
 public class Properties {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long propertiesId;
 
-    @SerializedName("meta")
-    @Expose
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "meta_id", referencedColumnName = "metaId")
     private Meta meta;
 
-    @SerializedName("timeseries")
-    @Expose
+
     @OneToMany(targetEntity = Timeseries.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "properties_id", referencedColumnName = "propertiesId")
     private List<Timeseries> timeseries = null;

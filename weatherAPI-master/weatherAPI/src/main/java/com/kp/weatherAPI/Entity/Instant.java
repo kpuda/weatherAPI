@@ -16,11 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-@Generated("jsonschema2pojo")
 public class Instant {
 
-    @SerializedName("details")
-    @Expose
+
     @Embedded
     private Details details;
 
