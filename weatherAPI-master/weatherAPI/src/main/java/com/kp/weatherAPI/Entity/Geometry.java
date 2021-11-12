@@ -24,7 +24,7 @@ public class Geometry {
     private String type;
 
     @ElementCollection
-    @Column(unique = true)
+    @CollectionTable(name="geometryCoordinates")
     private List<Double> coordinates = null;
 
 

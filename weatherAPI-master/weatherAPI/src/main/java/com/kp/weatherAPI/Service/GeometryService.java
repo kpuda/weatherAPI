@@ -1,30 +1,17 @@
 package com.kp.weatherAPI.Service;
 
 import com.kp.weatherAPI.Entity.Geometry;
-import com.kp.weatherAPI.Repository.GeometryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class GeometryService {
+public interface GeometryService {
 
-    private final GeometryRepository geometryRepository;
+    List<Geometry> getGeometryList();
 
-    public GeometryService(GeometryRepository geometryRepository) { this.geometryRepository = geometryRepository;}
+    Optional<Long> getGeometryIdByLatLon(Double lat, Double lon);
 
-    public List<Geometry> getGeometryList() {return geometryRepository.findAll();}
+    Long validateIfGeometryExists(Optional<Long> id);
 
-    public Long getGeometryId(Double lat, Double lon) {
-        List<Geometry> geometryList = getGeometryList();
-        Long geoId = null;
-        for (Geometry geometry : geometryList) {
-            if (geometry.getCoordinates().get(0).equals(lon) && geometry.getCoordinates().get(1).equals(lat)) {
-                geoId = geometry.getGeometryId();
-            }
-        }
-        return geoId;
-    }
-
+    Boolean validateIfGeometryDoesntExists(Optional<Long> id);
 }

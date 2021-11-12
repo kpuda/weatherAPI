@@ -1,9 +1,6 @@
 package com.kp.weatherAPI.Advices;
 
-import com.kp.weatherAPI.Entity.Weather;
-import com.kp.weatherAPI.Exceptions.WeatherAlreadyExistsException;
-import com.kp.weatherAPI.Exceptions.WeatherFetchException;
-import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
+import com.kp.weatherAPI.Exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,9 +18,9 @@ public class WeatherAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(WeatherFetchException.class)
+    @ExceptionHandler(WeatherGetErrorException.class)
     @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    public String WeatherFetchHandler(WeatherFetchException ex) {
+    public String WeatherGetHandler(WeatherGetErrorException ex) {
         return ex.getMessage();
     }
 
@@ -31,6 +28,20 @@ public class WeatherAdvice {
     @ExceptionHandler(WeatherAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String WeatherExistsHandler(WeatherAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(GeometryListGetErrorException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String GeometryListGetErrorHandler(GeometryListGetErrorException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(WeatherOrderException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String WeatherOrderExceptionHandler(WeatherOrderException ex) {
         return ex.getMessage();
     }
 }

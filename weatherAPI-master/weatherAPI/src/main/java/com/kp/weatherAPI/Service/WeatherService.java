@@ -1,34 +1,27 @@
 package com.kp.weatherAPI.Service;
 
-import com.kp.weatherAPI.Entity.Timeseries;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kp.weatherAPI.Entity.Weather;
-import com.kp.weatherAPI.Exceptions.WeatherAlreadyExistsException;
-import com.kp.weatherAPI.Repository.WeatherRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 
+import java.io.IOException;
 import java.util.List;
 
-@Service
-public class WeatherService {
 
-    private final WeatherRepository weatherRepository;
-    private final GeometryService geometryService;
+public interface WeatherService {
 
-    public WeatherService(WeatherRepository weatherRepository, GeometryService geometryService) {
-        this.weatherRepository = weatherRepository;
-        this.geometryService = geometryService;
-    }
+    void saveWeather(Weather weather);
 
-    public void saveWeather(Weather weather) {weatherRepository.save(weather);}
+    List<Weather> getWeatherForEveryLocation();
 
-    public List<Weather> fetchAll() {
-        return weatherRepository.findAll();
-    }
+    Weather getWeatherByGeometryId(Long id);
 
-    public Weather fetchWeatherByGeometryId(Long id) {return weatherRepository.findWeatherByGeoId(id);}
+    void deleteWeatherByLatLon(Double lat, Double lon);
 
-    public void deleteWeatherById(Long id) {
-        weatherRepository.deleteById(id);
-    }
+    Weather getNewWeatherOrder(String url, HttpEntity httpEntity) throws JsonProcessingException;
+
+    Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
+
+    void updateWeather(Weather weather);
 }

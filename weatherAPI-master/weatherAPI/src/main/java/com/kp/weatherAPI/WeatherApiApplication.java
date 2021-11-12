@@ -18,7 +18,7 @@ import java.util.Date;
 @SpringBootApplication
 public class WeatherApiApplication {
 
-
+      RestTemplate restTemplate = new RestTemplate();
     public static void main(String[] args) {
 
 
