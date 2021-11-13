@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -30,9 +29,9 @@ public class WeatherServiceImpl implements WeatherService {
     public void saveWeather(Weather weather) {
         if (geometryService.validateIfGeometryDoesntExists(
                 geometryService.getGeometryIdByLatLon(
-                        weather.getGeometry().getCoordinates().get(1),weather.getGeometry().getCoordinates().get(0))
-            ))
-        weatherRepository.save(weather);
+                        weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0))
+        ))
+            weatherRepository.save(weather);
     }
 
     @Override
@@ -43,19 +42,20 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public List<Weather> getWeatherForEveryLocation() {
+
         return weatherRepository.findAll();
     }
 
     @Override
     public Weather getWeatherByGeometryId(Long id) {
-        return weatherRepository.findById(id).orElseThrow(() -> new WeatherNotFoundException());
+        return weatherRepository.findById(id).orElseThrow(WeatherNotFoundException::new);
     }
 
     @Override
     public void deleteWeatherByLatLon(Double lat, Double lon) {
         weatherRepository.deleteById(
                 geometryService.validateIfGeometryExists(
-                        geometryService.getGeometryIdByLatLon(lat,lon)
+                        geometryService.getGeometryIdByLatLon(lat, lon)
                 )
         );
     }
@@ -72,8 +72,9 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException {
-        List<Timeseries> newTimeseriesList = timeseriesService.updateWeatherTimeseries(oldWeatherData.getProperties().getTimeseries(), refreshedWeatherData.getProperties().getTimeseries());
+    public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) {
+        List<Timeseries> newTimeseriesList = timeseriesService.updateWeatherTimeseries(
+                oldWeatherData.getProperties().getTimeseries(), refreshedWeatherData.getProperties().getTimeseries());
         newTimeseriesList.sort(Timeseries::compareTo);
         oldWeatherData.getProperties().setTimeseries(newTimeseriesList);
         return oldWeatherData;

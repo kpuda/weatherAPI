@@ -33,7 +33,7 @@ public class WeatherAdvice {
 
     @ResponseBody
     @ExceptionHandler(GeometryListGetErrorException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
     public String GeometryListGetErrorHandler(GeometryListGetErrorException ex) {
         return ex.getMessage();
     }

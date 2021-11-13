@@ -1,7 +1,6 @@
 package com.kp.weatherAPI.Service.Impl;
 
 import com.kp.weatherAPI.Entity.Geometry;
-import com.kp.weatherAPI.Exceptions.GeometryListGetErrorException;
 import com.kp.weatherAPI.Exceptions.WeatherAlreadyExistsException;
 import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
 import com.kp.weatherAPI.Repository.GeometryRepository;
@@ -20,6 +19,7 @@ public class GeometryServiceImpl implements GeometryService {
 
     @Override
     public List<Geometry> getGeometryList() {
+
         return geometryRepository.findAll();
     }
 
@@ -32,20 +32,16 @@ public class GeometryServiceImpl implements GeometryService {
                 .findFirst();
     }
 
+
     @Override
     public Long validateIfGeometryExists(Optional<Long> id) {
-       /* if (id.isEmpty()) {
-            throw new WeatherNotFoundException();
-        }*/
         return id.orElseThrow(WeatherNotFoundException::new);
-
     }
 
     @Override
     public Boolean validateIfGeometryDoesntExists(Optional<Long> id) {
-        if (!id.isEmpty()) {
-            throw new WeatherAlreadyExistsException();
-        } else
+        if (!id.isEmpty()) throw new WeatherAlreadyExistsException();
+        else
             return true;
 
     }
