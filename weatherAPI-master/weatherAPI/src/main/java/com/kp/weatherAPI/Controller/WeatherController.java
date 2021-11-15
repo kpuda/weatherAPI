@@ -65,7 +65,8 @@ public class WeatherController {
     public void updateWeatherEverwhere() throws IOException {
         log.info("getting every location and updating weather forecast");
         List<Geometry> geometryList = geometryService.getGeometryList();
-            for (Geometry geometry : geometryList) {
+
+        for (Geometry geometry : geometryList) {
                 Weather refreshedWeatherData = newWeatherOrder(geometry.getCoordinates().get(1), geometry.getCoordinates().get(0));
                 Weather oldWeatherData = (weatherService.getWeatherByGeometryId(geometryService.validateIfGeometryExists(
                         geometryService.getGeometryIdByLatLon(

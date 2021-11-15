@@ -8,6 +8,7 @@ import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
 import com.kp.weatherAPI.Service.WeatherService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
 
@@ -48,6 +50,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Weather getWeatherByGeometryId(Long id) {
+        log.info("Yes");
         return weatherRepository.findById(id).orElseThrow(WeatherNotFoundException::new);
     }
 

@@ -6,12 +6,14 @@ import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
 import com.kp.weatherAPI.Repository.GeometryRepository;
 import com.kp.weatherAPI.Service.GeometryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GeometryServiceImpl implements GeometryService {
 
@@ -27,7 +29,7 @@ public class GeometryServiceImpl implements GeometryService {
     public Optional<Long> getGeometryIdByLatLon(Double lat, Double lon) {
         List<Geometry> geometryList = getGeometryList();
         return geometryList.stream()
-                .filter(geometry -> geometry.getCoordinates().get(0).equals(lon) && geometry.getCoordinates().get(1).equals(lat))
+                .filter(geometry -> geometry.getCoordinates().get(1).equals(lat) && geometry.getCoordinates().get(0).equals(lon))
                 .map(Geometry::getGeometryId)
                 .findFirst();
     }

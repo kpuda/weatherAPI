@@ -22,8 +22,10 @@ public class TimeseriesServiceImpl implements TimeseriesService {
                         .flatMap(List::stream)
                         .collect(Collectors.toMap(Timeseries::getTime,
                                 timeseriesData -> timeseriesData,
-                                (Timeseries oldTimeseries, Timeseries newtTimeseries) -> oldTimeseries == null ? newtTimeseries : oldTimeseries))
+                                (Timeseries oldTimeseries, Timeseries newtTimeseries) -> oldTimeseries))
                         .values());
+
+
         timeseries.sort(Timeseries::compareTo);
 
         newData.forEach(timeseriesList -> timeseries.stream()
