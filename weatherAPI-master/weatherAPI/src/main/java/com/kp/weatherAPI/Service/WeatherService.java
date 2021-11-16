@@ -13,6 +13,7 @@ public interface WeatherService {
 
     void saveWeather(Weather weather);
 
+
     List<Weather> getWeatherForEveryLocation();
 
     Weather getWeatherByGeometryId(Long id);
@@ -24,4 +25,9 @@ public interface WeatherService {
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
 
     void updateWeather(Weather weather);
+
+
+    List<Weather> getWeatherList();
+
+    void updateAll(List<Weather> refreshedWeatherList);
 }

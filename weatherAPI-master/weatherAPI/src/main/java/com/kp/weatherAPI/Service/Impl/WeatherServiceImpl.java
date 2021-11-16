@@ -8,6 +8,7 @@ import com.kp.weatherAPI.Exceptions.WeatherNotFoundException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
 import com.kp.weatherAPI.Service.WeatherService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -43,6 +44,11 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
+    public void updateAll(List<Weather> refreshedWeatherList) {
+        weatherRepository.saveAll(refreshedWeatherList);
+    }
+
+    @Override
     public List<Weather> getWeatherForEveryLocation() {
 
         return weatherRepository.findAll();
@@ -63,8 +69,9 @@ public class WeatherServiceImpl implements WeatherService {
         );
     }
 
+    @SneakyThrows
     @Override
-    public Weather getNewWeatherOrder(String url, HttpEntity httpEntity) throws JsonProcessingException {
+    public Weather getNewWeatherOrder(String url, HttpEntity httpEntity)  {
         ResponseEntity<String> weatherResponse = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         Weather weather = objectMapper.readValue(weatherResponse.getBody(), Weather.class);
@@ -81,5 +88,10 @@ public class WeatherServiceImpl implements WeatherService {
         newTimeseriesList.sort(Timeseries::compareTo);
         oldWeatherData.getProperties().setTimeseries(newTimeseriesList);
         return oldWeatherData;
+    }
+
+    @Override
+    public List<Weather> getWeatherList() {
+        return weatherRepository.findAll();
     }
 }

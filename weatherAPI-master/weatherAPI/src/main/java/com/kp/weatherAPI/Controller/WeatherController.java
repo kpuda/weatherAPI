@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController()
@@ -64,18 +66,22 @@ public class WeatherController {
     @PutMapping("/update")
     public void updateWeatherEverwhere() throws IOException {
         log.info("getting every location and updating weather forecast");
-        List<Geometry> geometryList = geometryService.getGeometryList();
+        List<Weather> weatherList = weatherService.getWeatherList();
+        List<Weather> refreshedWeatherList= new ArrayList<>();
 
-        for (Geometry geometry : geometryList) {
-                Weather refreshedWeatherData = newWeatherOrder(geometry.getCoordinates().get(1), geometry.getCoordinates().get(0));
-                Weather oldWeatherData = (weatherService.getWeatherByGeometryId(geometryService.validateIfGeometryExists(
-                        geometryService.getGeometryIdByLatLon(
-                                geometry.getCoordinates().get(1),
-                                geometry.getCoordinates().get(0)))
-                ));
-                weatherService.updateWeather(
-                        weatherService.compareTimeseriesData(refreshedWeatherData, oldWeatherData));
-            }
+        weatherList.forEach(weather -> {
+                    try {
+                        Weather refreshedWeatherData = newWeatherOrder(weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
+                        Weather oldWeatherData = (weatherService.getWeatherByGeometryId(geometryService.validateIfGeometryExists(
+                                geometryService.getGeometryIdByLatLon(
+                                        weather.getGeometry().getCoordinates().get(1),
+                                        weather.getGeometry().getCoordinates().get(0))) ));
+                        refreshedWeatherList.add(
+                                weatherService.compareTimeseriesData(refreshedWeatherData,oldWeatherData));
+                    } catch (IOException e) {e.printStackTrace();}
+                });
+
+        weatherService.updateAll(refreshedWeatherList);
     }
     @DeleteMapping("/deletelocationbylatlon")
     public void deleteLocationByGeo(@RequestParam Double lat, @RequestParam Double lon) {
