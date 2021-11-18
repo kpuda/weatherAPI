@@ -11,37 +11,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class WeatherAdvice {
 
     @ResponseBody
-    @ExceptionHandler(WeatherNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String WeatherNotFoundHandler(WeatherNotFoundException ex) {
+    public String NotFoundHandler(NotFoundException ex) {
         return ex.getMessage();
     }
 
-    @ResponseBody
-    @ExceptionHandler(WeatherGetErrorException.class)
-    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    public String WeatherGetHandler(WeatherGetErrorException ex) {
-        return ex.getMessage();
-    }
 
     @ResponseBody
-    @ExceptionHandler(WeatherAlreadyExistsException.class)
+    @ExceptionHandler(AlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String WeatherExistsHandler(WeatherAlreadyExistsException ex) {
+    public String AlreadyExistsHandler(AlreadyExistsException ex) {
         return ex.getMessage();
     }
 
-    @ResponseBody
-    @ExceptionHandler(GeometryListGetErrorException.class)
-    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    public String GeometryListGetErrorHandler(GeometryListGetErrorException ex) {
-        return ex.getMessage();
-    }
 
     @ResponseBody
-    @ExceptionHandler(WeatherOrderException.class)
+    @ExceptionHandler(OrderException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String WeatherOrderExceptionHandler(WeatherOrderException ex) {
+    public String OrderExceptionHandler(OrderException ex) {
         return ex.getMessage();
     }
 }

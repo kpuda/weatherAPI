@@ -13,21 +13,19 @@ public interface WeatherService {
 
     void saveWeather(Weather weather);
 
+    Weather getWeatherByGeometryId(double lat, double lon);
 
-    List<Weather> getWeatherForEveryLocation();
+    void deleteWeather(Double lat, Double lon);
 
-    Weather getWeatherByGeometryId(Long id);
-
-    void deleteWeatherByLatLon(Double lat, Double lon);
-
-    Weather getNewWeatherOrder(String url, HttpEntity httpEntity) throws JsonProcessingException;
+    Weather getNewWeatherOrder(Double lat, Double lon) throws JsonProcessingException;
 
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
 
-    void updateWeather(Weather weather);
-
-
     List<Weather> getWeatherList();
 
-    void updateAll(List<Weather> refreshedWeatherList);
+    void updateAll();
+
+    List<Weather> updateAsync();
+
+    Weather newWeather(Double lat, Double lon);
 }

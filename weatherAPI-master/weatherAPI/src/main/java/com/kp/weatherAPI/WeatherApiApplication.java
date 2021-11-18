@@ -1,5 +1,6 @@
 package com.kp.weatherAPI;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kp.weatherAPI.Entity.Timeseries;
 import org.springframework.boot.SpringApplication;
@@ -7,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
@@ -42,15 +44,19 @@ public class WeatherApiApplication {
                 .build()
                 .apiInfo(createApiInfo());
     }
+    @Bean
+    public static ObjectMapper getObjectMapper(){
+        return new ObjectMapper();
+    }
 
     private ApiInfo createApiInfo() {
         return new ApiInfo("Weather API",
                 "Weather database",
                 "1.00",
-                "http://kp.pl",
-                new Contact("Krzysztof","http://kp.pl","kpuda.contact@gmail.com"),
+                "https://github.com/kpuda",
+                new Contact("Krzysztof","https://github.com/kpuda","kpuda.contact@gmail.com"),
                 "my own license",
-                "http://kp.pl",
+                "https://github.com/kpuda",
                 Collections.emptyList()
                 );
     }

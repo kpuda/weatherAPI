@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +22,11 @@ public class Geometry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long geometryId;
 
+    @NotNull
     private String type;
 
     @ElementCollection
     @CollectionTable(name="geometryCoordinates")
     private List<Double> coordinates = null;
-
 
 }

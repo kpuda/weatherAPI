@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 @lombok.Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,4 +20,5 @@ public class Data {
 
     @Embedded
     private Instant instant;
+
 }

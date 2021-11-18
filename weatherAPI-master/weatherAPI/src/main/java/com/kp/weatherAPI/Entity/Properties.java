@@ -30,5 +30,4 @@ public class Properties {
     @JoinColumn(name = "properties_id", referencedColumnName = "propertiesId")
     private List<Timeseries> timeseries = null;
 
-
 }

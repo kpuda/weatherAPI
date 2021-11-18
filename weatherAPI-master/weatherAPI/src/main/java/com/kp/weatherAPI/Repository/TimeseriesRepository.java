@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TimeseriesRepository extends JpaRepository<Timeseries,Long> {
+public interface TimeseriesRepository extends JpaRepository<Timeseries, Long> {
 }

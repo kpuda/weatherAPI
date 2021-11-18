@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class Timeseries implements Comparable<Timeseries> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long timeseriesId;
 
+    @NotNull
     private String time;
 
     @Embedded
