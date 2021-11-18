@@ -11,7 +11,7 @@ public interface GeometryService {
 
     Optional<Long> getGeometryIdByLatLon(Double lat, Double lon);
 
-    Long validateIfGeometryExists(Optional<Long> id);
+    Long validateIfGeometryByIdExists(Optional<Long> id);
 
-    Boolean validateIfGeometryDoesntExists(Optional<Long> id);
+    Boolean validateIfGeometryByIdDoesntExists(Optional<Long> id);
 }

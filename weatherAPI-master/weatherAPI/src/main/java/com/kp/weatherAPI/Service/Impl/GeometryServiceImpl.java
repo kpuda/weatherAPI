@@ -21,13 +21,13 @@ public class GeometryServiceImpl implements GeometryService {
 
     @Override
     public List<Geometry> getGeometryList() {
-
         return geometryRepository.findAll();
     }
 
     @Override
     public Optional<Long> getGeometryIdByLatLon(Double lat, Double lon) {
         List<Geometry> geometryList = getGeometryList();
+
         return geometryList.stream()
                 .filter(geometry -> geometry.getCoordinates().get(1).equals(lat) && geometry.getCoordinates().get(0).equals(lon))
                 .map(Geometry::getGeometryId)
@@ -36,13 +36,15 @@ public class GeometryServiceImpl implements GeometryService {
 
 
     @Override
-    public Long validateIfGeometryExists(Optional<Long> id) {
+    public Long validateIfGeometryByIdExists(Optional<Long> id) {
         return id.orElseThrow(WeatherNotFoundException::new);
     }
 
     @Override
-    public Boolean validateIfGeometryDoesntExists(Optional<Long> id) {
-        if (!id.isEmpty()) throw new WeatherAlreadyExistsException();
+    public Boolean validateIfGeometryByIdDoesntExists(Optional<Long> id) {
+        if (!id.isEmpty()) {
+            throw new WeatherAlreadyExistsException();
+        }
         else
             return true;
 

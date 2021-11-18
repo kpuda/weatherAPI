@@ -1,6 +1,5 @@
 package com.kp.weatherAPI.Service.Impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
@@ -30,7 +29,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public void saveWeather(Weather weather) {
-        if (geometryService.validateIfGeometryDoesntExists(
+        if (geometryService.validateIfGeometryByIdDoesntExists(
                 geometryService.getGeometryIdByLatLon(
                         weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0))
         ))
@@ -63,7 +62,7 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public void deleteWeatherByLatLon(Double lat, Double lon) {
         weatherRepository.deleteById(
-                geometryService.validateIfGeometryExists(
+                geometryService.validateIfGeometryByIdExists(
                         geometryService.getGeometryIdByLatLon(lat, lon)
                 )
         );
