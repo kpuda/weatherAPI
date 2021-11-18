@@ -1,7 +1,7 @@
 package com.kp.weatherAPI.Service.Impl;
 
 import com.kp.weatherAPI.Entity.Geometry;
-import com.kp.weatherAPI.Exceptions.AlreadyExistsException;
+import com.kp.weatherAPI.Exceptions.ConflictException;
 import com.kp.weatherAPI.Exceptions.NotFoundException;
 import com.kp.weatherAPI.Repository.GeometryRepository;
 import com.kp.weatherAPI.Service.GeometryService;
@@ -47,7 +47,7 @@ public class GeometryServiceImpl implements GeometryService {
     public Boolean validateIfGeometryByIdDoesntExists(Optional<Long> id) {
         log.info("Throw exception if geometry already exists");
         if (!id.isEmpty()) {
-            throw new AlreadyExistsException(GEOMETRY_ALREADY_EXISTS);
+            throw new ConflictException(GEOMETRY_ALREADY_EXISTS);
         } else
             return true;
 

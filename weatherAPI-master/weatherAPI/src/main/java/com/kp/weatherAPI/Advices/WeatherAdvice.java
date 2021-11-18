@@ -19,17 +19,10 @@ public class WeatherAdvice {
 
 
     @ResponseBody
-    @ExceptionHandler(AlreadyExistsException.class)
+    @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String AlreadyExistsHandler(AlreadyExistsException ex) {
+    public String ConflictExistsHandler(ConflictException ex) {
         return ex.getMessage();
     }
 
-
-    @ResponseBody
-    @ExceptionHandler(OrderException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public String OrderExceptionHandler(OrderException ex) {
-        return ex.getMessage();
-    }
 }
