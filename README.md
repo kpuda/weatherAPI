@@ -5,7 +5,7 @@ This web service focuses on consuming an external API to the data which is then 
 - MySQL database <br>
 - Swagger - for API visualisation<br><br>
   
- <h5>JSON test files are available in the folder above.</h5>
+ <h5>Swagger link: http://localhost:8080/swagger-ui.html#/</h5>
 
 
 # Available endpoints: 
