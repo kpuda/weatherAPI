@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ public class TimeseriesServiceImpl implements TimeseriesService {
                                 timeseriesData -> timeseriesData,
                                 (Timeseries oldTimeseries, Timeseries newtTimeseries) -> oldTimeseries))
                         .values());
-
 
         timeseries.sort(Timeseries::compareTo);
 

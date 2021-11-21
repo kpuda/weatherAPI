@@ -3,6 +3,7 @@ package com.kp.weatherAPI.Service.Impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
+import com.kp.weatherAPI.Exceptions.ConflictException;
 import com.kp.weatherAPI.Exceptions.NotFoundException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
 import com.kp.weatherAPI.Service.WeatherService;
@@ -11,18 +12,15 @@ import com.mashape.unirest.http.Unirest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -32,15 +30,16 @@ public class WeatherServiceImpl implements WeatherService {
     private final WeatherRepository weatherRepository;
     private final TimeseriesServiceImpl timeseriesService;
     private final GeometryServiceImpl geometryService;
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private final String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final static String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
     private final static String USER_AGENT = "user-agent";
+    private final static String LAT_LON_OUT_BOUNDS = "The Lat Lon configuration is out of bounds. Value of latitude  range from -90 to 90° and -180° to 180° for longitude";
 
 
     @Transactional
     @Override
-    public void saveWeather(Weather weather) {
+    public void weatherSave(Weather weather)  {
         if (geometryService.validateIfGeometryByIdDoesntExists(
                 geometryService.getGeometryIdByLatLon(
                         weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0)))) {
@@ -48,36 +47,44 @@ public class WeatherServiceImpl implements WeatherService {
         }
     }
 
+    @SneakyThrows
     @Transactional
     @Override
     @Scheduled(fixedRateString = "PT30M")
     public void updateAll() {
-        weatherRepository.saveAll(updateAsync());
-    }
-
-
-    @Override
-    public Weather getWeatherByGeometryId(double lat, double lon) {
-        log.info("kurwa");
-        return weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
-                        geometryService.getGeometryIdByLatLon(lat, lon)))
-                .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
+        log.info("Started scheduled updateAll()");
+        Future<List<Weather>> weatherList = updateAsync();
+        if (!weatherList.isDone()) {
+            log.info("Async failed.");
+        } else {
+            log.info("Saving the updated list. Scheduled ended.");
+            weatherRepository.saveAll(weatherList.get());
+        }
     }
 
     @Override
-    public void deleteWeather(Double lat, Double lon) {
-        weatherRepository.deleteById(
-                geometryService.validateIfGeometryByIdExists(
-                        geometryService.getGeometryIdByLatLon(lat, lon)
-                )
-        );
+    @Async("autoWeatherUpdate")
+    public Future<List<Weather>> updateAsync() {
+        List<Weather> weatherList = getWeatherList();
+        log.info("Getting weather list.");
+        List<Weather> refreshedWeatherList = new ArrayList<>();
+
+        weatherList.forEach(weather -> {
+            Weather refreshedWeatherData = getNewWeatherOrder(weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
+            Weather oldWeatherData = (getWeatherByGeometry(
+                    weather.getGeometry().getCoordinates().get(1),
+                    weather.getGeometry().getCoordinates().get(0)));
+            refreshedWeatherList.add(
+                    compareTimeseriesData(refreshedWeatherData, oldWeatherData));
+        });
+        return AsyncResult.forValue(refreshedWeatherList);
     }
 
     @SneakyThrows
     @Override
     public Weather getNewWeatherOrder(Double lat, Double lon) {
         String url = WEATHER_API_URL + lat + "&lon=" + lon;
-        HttpResponse<String> weatherResponse= Unirest.post(url).header("Content-type",USER_AGENT).asString();
+        HttpResponse<String> weatherResponse = Unirest.post(url).header("Content-type", USER_AGENT).asString();
         Weather weather = objectMapper.readValue(weatherResponse.getBody(), Weather.class);
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
         timeseries.sort(Timeseries::compareTo);
@@ -86,14 +93,41 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public Weather newWeather(Double lat, Double lon) {
-        Weather weather = getNewWeatherOrder(lat, lon);
-        saveWeather(weather);
-        return weather;
+    public Weather newWeatherOrder(Double lat, Double lon) {
+        log.info("Waiting for weather to be fetched and passing it to weatherSave().");
+        if (validateGeometryCompatibility(lat, lon)) {
+            Weather weather = getNewWeatherOrder(lat, lon);
+            weatherSave(weather);
+            return weather;
+        } else
+            return null; //TODO Don't return null
+    }
+
+    @Override
+    public Boolean validateGeometryCompatibility(Double lat, Double lon) {
+        if (lat <= 90 && lat >= -90 && lon <= 180 && lon >= -180) {
+            return true;
+        } else
+            throw new ConflictException(LAT_LON_OUT_BOUNDS);
+    }
+
+    @Override
+    public Weather getWeatherByGeometry(double lat, double lon) {
+        log.info("Returning weather entity if exists");
+        return weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
+                        geometryService.getGeometryIdByLatLon(lat, lon)))
+                .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
+    }
+
+    @Override
+    public List<Weather> getWeatherList() {
+        log.info("Returning weather list from database");
+        return weatherRepository.findAll();
     }
 
     @Override
     public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) {
+        log.info("Updating forecast");
         List<Timeseries> newTimeseriesList = timeseriesService.updateWeatherTimeseries(
                 oldWeatherData.getProperties().getTimeseries(), refreshedWeatherData.getProperties().getTimeseries());
         newTimeseriesList.sort(Timeseries::compareTo);
@@ -102,25 +136,13 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public List<Weather> getWeatherList() {
-        return weatherRepository.findAll();
-    }
-
-    @Async
-    @Override
-    public List<Weather> updateAsync() {
-        List<Weather> weatherList = getWeatherList();
-        List<Weather> refreshedWeatherList = new ArrayList<>();
-        weatherList.forEach(weather -> {
-            Weather refreshedWeatherData = getNewWeatherOrder(weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
-            Weather oldWeatherData = (getWeatherByGeometryId(
-                    weather.getGeometry().getCoordinates().get(1),
-                    weather.getGeometry().getCoordinates().get(0)));
-            refreshedWeatherList.add(
-                    compareTimeseriesData(refreshedWeatherData, oldWeatherData));
-        });
-
-        return refreshedWeatherList;
+    public void deleteWeatherByGeometry(Double lat, Double lon) {
+        log.info("Deleting weather for given location");
+        weatherRepository.deleteById(
+                geometryService.validateIfGeometryByIdExists(
+                        geometryService.getGeometryIdByLatLon(lat, lon)
+                )
+        );
     }
 
 }

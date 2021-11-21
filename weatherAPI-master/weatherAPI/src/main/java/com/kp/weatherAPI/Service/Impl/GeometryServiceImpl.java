@@ -23,14 +23,15 @@ public class GeometryServiceImpl implements GeometryService {
 
     @Override
     public List<Geometry> getGeometryList() {
-        log.info("Getting list of stored geometry list.");
+        log.info("Getting list of stored geometries.");
         return geometryRepository.findAll();
     }
 
     @Override
     public Optional<Long> getGeometryIdByLatLon(Double lat, Double lon) {
+        log.info("Getting list of available geometries.");
         List<Geometry> geometryList = getGeometryList();
-        log.info("Getting list of available geometries and comparing them to requested parameters.");
+        log.info("Streaming list to filter if any of ID meets the requirements.");
         return geometryList.stream()
                 .filter(geometry -> geometry.getCoordinates().get(1).equals(lat) && geometry.getCoordinates().get(0).equals(lon))
                 .map(Geometry::getGeometryId)
@@ -39,17 +40,15 @@ public class GeometryServiceImpl implements GeometryService {
 
     @Override
     public Long validateIfGeometryByIdExists(Optional<Long> id) {
-        log.info("If exists - return ID. Otherwise throw NotFounException");
         return id.orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
     }
 
     @Override
     public Boolean validateIfGeometryByIdDoesntExists(Optional<Long> id) {
-        log.info("Throw exception if geometry already exists");
         if (!id.isEmpty()) {
             throw new ConflictException(GEOMETRY_ALREADY_EXISTS);
-        } else
+        } else {
             return true;
-
+        }
     }
 }
