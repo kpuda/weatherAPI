@@ -18,8 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Future;
 
 @Service
@@ -39,13 +38,14 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Transactional
     @Override
-    public void weatherSave(Weather weather)  {
+    public void weatherSave(Weather weather) {
         if (geometryService.validateIfGeometryByIdDoesntExists(
                 geometryService.getGeometryIdByLatLon(
                         weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0)))) {
             weatherRepository.save(weather);
         }
     }
+
 
     @SneakyThrows
     @Transactional
@@ -68,16 +68,26 @@ public class WeatherServiceImpl implements WeatherService {
         List<Weather> weatherList = getWeatherList();
         log.info("Getting weather list.");
         List<Weather> refreshedWeatherList = new ArrayList<>();
-
         weatherList.forEach(weather -> {
             Weather refreshedWeatherData = getNewWeatherOrder(weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
-            Weather oldWeatherData = (getWeatherByGeometry(
+            Weather oldWeatherData = (
+                    getWeatherFromList(
                     weather.getGeometry().getCoordinates().get(1),
-                    weather.getGeometry().getCoordinates().get(0)));
+                    weather.getGeometry().getCoordinates().get(0),
+                    weatherList));
+
             refreshedWeatherList.add(
-                    compareTimeseriesData(refreshedWeatherData, oldWeatherData));
+                    compareTimeseriesData(refreshedWeatherData, oldWeatherData)
+            );
         });
+
         return AsyncResult.forValue(refreshedWeatherList);
+    }
+    @Override
+    public Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList) {
+        return weatherList.stream()
+                .filter(weather -> weather.getGeometry().getCoordinates().get(1).equals(lat) && weather.getGeometry().getCoordinates().get(0).equals(lon))
+                .findAny().get();
     }
 
     @SneakyThrows
@@ -100,7 +110,7 @@ public class WeatherServiceImpl implements WeatherService {
             weatherSave(weather);
             return weather;
         } else
-            return null; //TODO Don't return null
+            return null;
     }
 
     @Override
@@ -114,6 +124,15 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public Weather getWeatherByGeometry(double lat, double lon) {
         log.info("Returning weather entity if exists");
+        /*Weather weather = weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
+                        geometryService.getGeometryIdByLatLon(lat, lon)))
+                .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
+        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
+
+        OptionalDouble average = timeseries.stream()
+                .filter(time -> time.getTime().substring(0, 10).equals(String.valueOf(LocalDate.now())))
+                .mapToDouble(timeseries1 -> timeseries1.getData().getInstant().getDetails().getAirTemperature()).average();
+*/// TODO UNDER TESTING
         return weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
                         geometryService.getGeometryIdByLatLon(lat, lon)))
                 .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
@@ -122,6 +141,7 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public List<Weather> getWeatherList() {
         log.info("Returning weather list from database");
+        List<Weather> weatherList = weatherRepository.findAll();
         return weatherRepository.findAll();
     }
 

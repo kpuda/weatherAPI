@@ -12,6 +12,8 @@ public interface WeatherService {
 
     Weather getWeatherByGeometry(double lat, double lon);
 
+    Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList);
+
     Weather getNewWeatherOrder(Double lat, Double lon) throws JsonProcessingException;
 
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
