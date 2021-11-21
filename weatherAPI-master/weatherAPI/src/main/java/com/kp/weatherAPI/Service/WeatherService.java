@@ -2,32 +2,31 @@ package com.kp.weatherAPI.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kp.weatherAPI.Entity.Weather;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Future;
 
 
 public interface WeatherService {
 
-    void saveWeather(Weather weather);
+    Weather getWeatherByGeometry(double lat, double lon);
 
-
-    List<Weather> getWeatherForEveryLocation();
-
-    Weather getWeatherByGeometryId(Long id);
-
-    void deleteWeatherByLatLon(Double lat, Double lon);
-
-    Weather getNewWeatherOrder(String url, HttpEntity httpEntity) throws JsonProcessingException;
+    Weather getNewWeatherOrder(Double lat, Double lon) throws JsonProcessingException;
 
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
 
-    void updateWeather(Weather weather);
-
+    Weather newWeatherOrder(Double lat, Double lon);
 
     List<Weather> getWeatherList();
 
-    void updateAll(List<Weather> refreshedWeatherList);
+    Future<List<Weather>> updateAsync();
+
+    Boolean validateGeometryCompatibility(Double lat, Double lon);
+
+    void weatherSave(Weather weather);
+
+    void updateAll();
+
+    void deleteWeatherByGeometry(Double lat, Double lon);
 }

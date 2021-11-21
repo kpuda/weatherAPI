@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface GeometryService {
 
-    List<Geometry> getGeometryList();
+    Long validateIfGeometryByIdExists(Optional<Long> id);
 
     Optional<Long> getGeometryIdByLatLon(Double lat, Double lon);
 
-    Long validateIfGeometryByIdExists(Optional<Long> id);
+    List<Geometry> getGeometryList();
 
     Boolean validateIfGeometryByIdDoesntExists(Optional<Long> id);
 }

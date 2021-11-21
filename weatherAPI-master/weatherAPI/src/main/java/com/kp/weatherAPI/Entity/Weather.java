@@ -4,8 +4,7 @@ package com.kp.weatherAPI.Entity;
 import javax.annotation.Generated;
 import javax.persistence.*;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +19,7 @@ public class Weather {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String type;
 
     @OneToOne(cascade = CascadeType.ALL)
