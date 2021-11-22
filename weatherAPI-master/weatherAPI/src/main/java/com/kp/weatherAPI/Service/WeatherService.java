@@ -1,6 +1,7 @@
 package com.kp.weatherAPI.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kp.weatherAPI.EntityDTO.WeatherDTO;
 import com.kp.weatherAPI.Entity.Weather;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.concurrent.Future;
 
 public interface WeatherService {
 
-    Weather getWeatherByGeometry(double lat, double lon);
+    WeatherDTO getWeatherByGeometry(double lat, double lon);
 
     Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList);
 
@@ -19,6 +20,10 @@ public interface WeatherService {
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
 
     Weather newWeatherOrder(Double lat, Double lon);
+
+    WeatherDTO getWeatherForWeek(Weather weather);
+
+    List<WeatherDTO> getWeatherListForIncomingDays();
 
     List<Weather> getWeatherList();
 

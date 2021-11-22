@@ -16,7 +16,7 @@ public class WeatherAdvice {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String NotFoundHandler(NotFoundException ex) {
-        log.info("NotFoundException thrown. Message: "+ex);
+        log.info("NotFoundException thrown. Message: " + ex);
         return ex.getMessage();
     }
 
@@ -25,7 +25,7 @@ public class WeatherAdvice {
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String ConflictExistsHandler(ConflictException ex) {
-        log.info("ConflictException thrown. Message: "+ex);
+        log.info("ConflictException thrown. Message: " + ex);
         return ex.getMessage();
     }
 

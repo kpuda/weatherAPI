@@ -1,6 +1,7 @@
 package com.kp.weatherAPI.Service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kp.weatherAPI.EntityDTO.*;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
 import com.kp.weatherAPI.Exceptions.ConflictException;
@@ -12,23 +13,28 @@ import com.mashape.unirest.http.Unirest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+
 public class WeatherServiceImpl implements WeatherService {
 
     private final WeatherRepository weatherRepository;
     private final TimeseriesServiceImpl timeseriesService;
     private final GeometryServiceImpl geometryService;
+    private final ModelMapper modelMapper;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final static String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
@@ -45,7 +51,6 @@ public class WeatherServiceImpl implements WeatherService {
             weatherRepository.save(weather);
         }
     }
-
 
     @SneakyThrows
     @Transactional
@@ -72,9 +77,9 @@ public class WeatherServiceImpl implements WeatherService {
             Weather refreshedWeatherData = getNewWeatherOrder(weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
             Weather oldWeatherData = (
                     getWeatherFromList(
-                    weather.getGeometry().getCoordinates().get(1),
-                    weather.getGeometry().getCoordinates().get(0),
-                    weatherList));
+                            weather.getGeometry().getCoordinates().get(1),
+                            weather.getGeometry().getCoordinates().get(0),
+                            weatherList));
 
             refreshedWeatherList.add(
                     compareTimeseriesData(refreshedWeatherData, oldWeatherData)
@@ -83,11 +88,12 @@ public class WeatherServiceImpl implements WeatherService {
 
         return AsyncResult.forValue(refreshedWeatherList);
     }
+
     @Override
     public Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList) {
         return weatherList.stream()
                 .filter(weather -> weather.getGeometry().getCoordinates().get(1).equals(lat) && weather.getGeometry().getCoordinates().get(0).equals(lon))
-                .findAny().get();
+                .findFirst().get();
     }
 
     @SneakyThrows
@@ -121,33 +127,71 @@ public class WeatherServiceImpl implements WeatherService {
             throw new ConflictException(LAT_LON_OUT_BOUNDS);
     }
 
+    // TODO UNDER TESTING
     @Override
-    public Weather getWeatherByGeometry(double lat, double lon) {
+    public WeatherDTO getWeatherByGeometry(double lat, double lon) {
         log.info("Returning weather entity if exists");
-        /*Weather weather = weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
+        Weather weather = weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
                         geometryService.getGeometryIdByLatLon(lat, lon)))
                 .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
-        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
+        return getWeatherForWeek(weather);
+    }
 
-        OptionalDouble average = timeseries.stream()
-                .filter(time -> time.getTime().substring(0, 10).equals(String.valueOf(LocalDate.now())))
-                .mapToDouble(timeseries1 -> timeseries1.getData().getInstant().getDetails().getAirTemperature()).average();
-*/// TODO UNDER TESTING
-        return weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
-                        geometryService.getGeometryIdByLatLon(lat, lon)))
-                .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
+    @Override
+    public List<WeatherDTO> getWeatherListForIncomingDays() {
+        return getWeatherList().stream().map(this::getWeatherForWeek).collect(Collectors.toList());
+    }
+
+    @Override
+    public WeatherDTO getWeatherForWeek(Weather weather) {
+        WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
+        Set<TimeseriesDTO> timeseriesDAOList = new HashSet<>();
+        Set<String> daySet = new HashSet<>();
+        daySet.add(String.valueOf(LocalDate.now()));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(2)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(3)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(4)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(5)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(6)));
+
+        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
+        timeseries.sort(Timeseries::compareTo);
+        daySet.forEach(day -> timeseries
+                .stream()
+                .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
+                .map(timeseries1 -> {
+                    DataDTO dataDAO = new DataDTO();
+                    dataDAO.setTime(timeseries1.getTime().substring(11));
+                    dataDAO.setInstant(new InstantDTO(
+                            new DetailsDTO(
+                                    timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
+                                    timeseries1.getData().getInstant().getDetails().getAirTemperature(),
+                                    timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
+                                    timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
+                                    timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
+                                    timeseries1.getData().getInstant().getDetails().getWindSpeed())));
+
+                    TimeseriesDTO timeseriesDAO = new TimeseriesDTO();
+                    timeseriesDAO.setDate(timeseries1.getTime().substring(0, 10));
+                    timeseriesDAO.setData(dataDAO);
+                    timeseriesDAOList.add(timeseriesDAO);
+                    return timeseriesDAO;
+                }));
+        List<TimeseriesDTO> time = new ArrayList<>(timeseriesDAOList);
+        time.sort(TimeseriesDTO::compareTo);
+        weatherDAO.getProperties().setTimeseries(time);
+        return weatherDAO;
     }
 
     @Override
     public List<Weather> getWeatherList() {
-        log.info("Returning weather list from database");
-        List<Weather> weatherList = weatherRepository.findAll();
         return weatherRepository.findAll();
     }
 
     @Override
     public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) {
-        log.info("Updating forecast");
+        log.info("Updating forecast for lat: {}, lon: {}", refreshedWeatherData.getGeometry().getCoordinates().get(1), refreshedWeatherData.getGeometry().getCoordinates().get(0));
         List<Timeseries> newTimeseriesList = timeseriesService.updateWeatherTimeseries(
                 oldWeatherData.getProperties().getTimeseries(), refreshedWeatherData.getProperties().getTimeseries());
         newTimeseriesList.sort(Timeseries::compareTo);
@@ -160,8 +204,7 @@ public class WeatherServiceImpl implements WeatherService {
         log.info("Deleting weather for given location");
         weatherRepository.deleteById(
                 geometryService.validateIfGeometryByIdExists(
-                        geometryService.getGeometryIdByLatLon(lat, lon)
-                )
+                        geometryService.getGeometryIdByLatLon(lat, lon))
         );
     }
 
