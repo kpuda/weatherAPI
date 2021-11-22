@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 //@RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -20,7 +19,7 @@ class WeatherRepositoryTest {
     private WeatherRepository weatherRepository;
 
     @Test
-    void shouldReturnList() {
+    void shouldReturnList(){
         List<Weather> all = weatherRepository.findAll();
         System.out.println(all);
     }

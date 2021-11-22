@@ -35,7 +35,7 @@ public class WeatherServiceImpl implements WeatherService {
     private final TimeseriesServiceImpl timeseriesService;
     private final GeometryServiceImpl geometryService;
     private final ModelMapper modelMapper;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final static ObjectMapper objectMapper = new ObjectMapper();
     private final static String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
     private final static String USER_AGENT = "user-agent";
@@ -177,7 +177,8 @@ public class WeatherServiceImpl implements WeatherService {
                     timeseriesDAO.setData(dataDAO);
                     timeseriesDAOList.add(timeseriesDAO);
                     return timeseriesDAO;
-                }));
+                }).collect(Collectors.toSet()));
+
         List<TimeseriesDTO> time = new ArrayList<>(timeseriesDAOList);
         time.sort(TimeseriesDTO::compareTo);
         weatherDAO.getProperties().setTimeseries(time);

@@ -24,15 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WeatherControllerTest {
 
 
+
     @Autowired
     private WeatherServiceImpl weatherService;
 
     @SneakyThrows
     @Test
-    public void dunno() {
+    public void dunno(){
         Weather weather = weatherService.newWeatherOrder(50.0, 19.0);
 
-        List<Weather> weatherList = List.of(weather);
+        List<Weather> weatherList=List.of(weather);
 
         given(weatherService.getWeatherList()).willReturn(weatherList);
 

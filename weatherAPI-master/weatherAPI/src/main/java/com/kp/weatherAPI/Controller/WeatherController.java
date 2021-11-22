@@ -40,7 +40,7 @@ public class WeatherController {
     @ApiOperation(value = "Post new weather location",
             notes = "Post new weather forecastlocation based on lat and lon geometry parameters")
     @PostMapping(WEATHER_NEW)
-    Weather newWeatherOrder(@ApiParam(value = "Value of latitude for the location", example = "90.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude for the location", example = "90.0") @RequestParam Double lon) {
+    Weather newWeatherOrder(@ApiParam(value = "Value of latitude for the location - required", example = "90.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude for the location - required", example = "90.0") @RequestParam Double lon) {
         log.info("Passing lat and lon parameters to trigger POSTMAPPING save new weather location");
         return weatherService.newWeatherOrder(lat, lon);
     }
@@ -48,7 +48,7 @@ public class WeatherController {
     @ApiOperation(value = "Get weather forecast by geometry values",
             notes = "Getting weather forecast for location stored in database by lat and lon geometry parameters")
     @GetMapping(WEATHER_FIND)
-    public WeatherDTO getWeatherByGeo(@ApiParam(value = "Value of latitude", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude", example = "19.0") @RequestParam Double lon) {
+    public WeatherDTO getWeatherByGeo(@ApiParam(value = "Value of latitude - required", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude - required", example = "19.0") @RequestParam Double lon) {
         log.info("Get weather by lat lon or throw WeatherNotFoundException");
         return weatherService.getWeatherByGeometry(lat, lon);
     }
@@ -65,7 +65,7 @@ public class WeatherController {
     @ApiOperation(value = "Delete location by geometry values",
             notes = "Deleting weather from database based on lat and lon parameters")
     @DeleteMapping(WEATHER_DELETE)
-    public void deleteWeatherByGeo(@ApiParam(value = "Value of longitude", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude", example = "19.0") @RequestParam Double lon) {
+    public void deleteWeatherByGeo(@ApiParam(value = "Value of longitude - required", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude - required", example = "19.0") @RequestParam Double lon) {
         log.info("deleting by lat and lon coords or else throw WeatherNotFound exception");
         weatherService.deleteWeatherByGeometry(lat, lon);
     }
