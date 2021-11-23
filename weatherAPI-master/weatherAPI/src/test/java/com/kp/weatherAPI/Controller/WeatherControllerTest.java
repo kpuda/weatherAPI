@@ -31,11 +31,11 @@ class WeatherControllerTest {
     @SneakyThrows
     @Test
     public void dunno(){
-        Weather weather = weatherService.newWeatherOrder(50.0, 19.0);
+        //Weather weather = weatherService.newWeatherOrder(50.0, 19.0);
 
-        List<Weather> weatherList=List.of(weather);
+       // List<Weather> weatherList=List.of(weather);
 
-        given(weatherService.getWeatherList()).willReturn(weatherList);
+       // given(weatherService.getWeatherList()).willReturn(weatherList);
 
     }
 

@@ -109,12 +109,12 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public Weather newWeatherOrder(Double lat, Double lon) {
+    public WeatherDTO newWeatherOrder(Double lat, Double lon) {
         log.info("Waiting for weather to be fetched and passing it to weatherSave().");
         if (validateGeometryCompatibility(lat, lon)) {
             Weather weather = getNewWeatherOrder(lat, lon);
             weatherSave(weather);
-            return weather;
+            return getWeatherForWeek(weather);
         } else
             return null;
     }
@@ -142,10 +142,12 @@ public class WeatherServiceImpl implements WeatherService {
         return getWeatherList().stream().map(this::getWeatherForWeek).collect(Collectors.toList());
     }
 
-    @Override
+    /*
+    //TODO under test
+       @Override
     public WeatherDTO getWeatherForWeek(Weather weather) {
         WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
-        Set<TimeseriesDTO> timeseriesDAOList = new HashSet<>();
+        Set<TimeseriesDTO> timeseriesDTOList = new HashSet<>();
         Set<String> daySet = new HashSet<>();
         daySet.add(String.valueOf(LocalDate.now()));
         daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
@@ -163,25 +165,62 @@ public class WeatherServiceImpl implements WeatherService {
                 .map(timeseries1 -> {
                     DataDTO dataDAO = new DataDTO();
                     dataDAO.setTime(timeseries1.getTime().substring(11));
-                    dataDAO.setInstant(new InstantDTO(
-                            new DetailsDTO(
-                                    timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
-                                    timeseries1.getData().getInstant().getDetails().getAirTemperature(),
-                                    timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
-                                    timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
-                                    timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
-                                    timeseries1.getData().getInstant().getDetails().getWindSpeed())));
-
+                    dataDAO.setDetails(new DetailsDTO(
+                            timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
+                            timeseries1.getData().getInstant().getDetails().getAirTemperature(),
+                            timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
+                            timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
+                            timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
+                            timeseries1.getData().getInstant().getDetails().getWindSpeed()));
                     TimeseriesDTO timeseriesDAO = new TimeseriesDTO();
                     timeseriesDAO.setDate(timeseries1.getTime().substring(0, 10));
                     timeseriesDAO.setData(dataDAO);
-                    timeseriesDAOList.add(timeseriesDAO);
+                    timeseriesDTOList.add(timeseriesDAO);
                     return timeseriesDAO;
                 }).collect(Collectors.toSet()));
+        List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOList);
+        timeseriesDTO.sort(TimeseriesDTO::compareTo);
+        weatherDAO.getProperties().setTimeseries(timeseriesDTO);
+        return weatherDAO;
 
-        List<TimeseriesDTO> time = new ArrayList<>(timeseriesDAOList);
-        time.sort(TimeseriesDTO::compareTo);
-        weatherDAO.getProperties().setTimeseries(time);
+    }*/
+    @Override
+    public WeatherDTO getWeatherForWeek(Weather weather) {
+        WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
+        Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
+        Set<String> daySet = new HashSet<>();
+        log.info("Preparing weather for {}, {} for next 7 days",weather.getGeometry().getCoordinates().get(1),weather.getGeometry().getCoordinates().get(0));
+        daySet.add(String.valueOf(LocalDate.now()));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(2)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(3)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(4)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(5)));
+        daySet.add(String.valueOf(LocalDate.now().plusDays(6)));
+
+        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
+        daySet.forEach(day -> {
+            List<DataDTO> dataDTOList = timeseries
+                    .stream()
+                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
+                    .map(timeseries1 -> {
+                        DataDTO dataDTO = new DataDTO();
+                        dataDTO.setTime(timeseries1.getTime().substring(11));
+                        dataDTO.setDetails(new DetailsDTO(
+                                timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
+                                timeseries1.getData().getInstant().getDetails().getAirTemperature(),
+                                timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
+                                timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
+                                timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
+                                timeseries1.getData().getInstant().getDetails().getWindSpeed()
+                        ));
+                        return dataDTO;
+                    }).collect(Collectors.toList());
+            timeseriesDTOSet.add(new TimeseriesDTO(day, dataDTOList));
+        });
+        List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOSet);
+        timeseriesDTO.sort(TimeseriesDTO::compareTo);
+        weatherDAO.getProperties().setTimeseries(timeseriesDTO);
         return weatherDAO;
     }
 
