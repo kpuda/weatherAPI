@@ -1,4 +1,4 @@
-# weatherAPI
+# weatherAPI - not finished yet
 This web service focuses on consuming an external API to the data which is then saved to the database. You are able to store a forecast for given location within few seconds. The forecast for stored locations is sending request to update every 30 minutes. 
 <h3>Technologies used:</h3><p>
 - Spring framework <br>
