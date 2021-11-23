@@ -54,8 +54,8 @@ public class WeatherApiApplication {
     private ApiInfo createApiInfo() {
         return new ApiInfo("Weather API",
                 "Weather database",
-                "0.5.0",
-                "https://github.com/kpuda",
+                "0.5.2",
+                null,
                 new Contact("Krzysztof", "https://github.com/kpuda", "kpuda.contact@gmail.com"),
                 null,
                 null,

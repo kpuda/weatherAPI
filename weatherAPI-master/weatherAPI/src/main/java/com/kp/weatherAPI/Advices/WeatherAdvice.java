@@ -28,5 +28,12 @@ public class WeatherAdvice {
         log.info("ConflictException thrown. Message: " + ex);
         return ex.getMessage();
     }
+    @ResponseBody
+    @ExceptionHandler(ValuesOutOfBoundsException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public String ValuesOutOfBoundsException(ValuesOutOfBoundsException ex) {
+        log.info("ValuesOutOfBoundsException thrown. Message: " + ex);
+        return ex.getMessage();
+    }
 
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kp.weatherAPI.EntityDTO.*;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
-import com.kp.weatherAPI.Exceptions.ConflictException;
 import com.kp.weatherAPI.Exceptions.NotFoundException;
+import com.kp.weatherAPI.Exceptions.ValuesOutOfBoundsException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
 import com.kp.weatherAPI.Service.WeatherService;
 import com.mashape.unirest.http.HttpResponse;
@@ -40,7 +40,7 @@ public class WeatherServiceImpl implements WeatherService {
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
     private final static String USER_AGENT = "user-agent";
     private final static String LAT_LON_OUT_BOUNDS = "The Lat Lon configuration is out of bounds. Value of latitude  range from -90 to 90° and -180° to 180° for longitude";
-
+    private final static String DB_CONNECTION_PROBLEM = "Problem connecting with data source";
 
     @Transactional
     @Override
@@ -85,7 +85,6 @@ public class WeatherServiceImpl implements WeatherService {
                     compareTimeseriesData(refreshedWeatherData, oldWeatherData)
             );
         });
-
         return AsyncResult.forValue(refreshedWeatherList);
     }
 
@@ -124,7 +123,7 @@ public class WeatherServiceImpl implements WeatherService {
         if (lat <= 90 && lat >= -90 && lon <= 180 && lon >= -180) {
             return true;
         } else
-            throw new ConflictException(LAT_LON_OUT_BOUNDS);
+            throw new ValuesOutOfBoundsException(LAT_LON_OUT_BOUNDS);
     }
 
     // TODO UNDER TESTING
@@ -142,54 +141,12 @@ public class WeatherServiceImpl implements WeatherService {
         return getWeatherList().stream().map(this::getWeatherForWeek).collect(Collectors.toList());
     }
 
-    /*
-    //TODO under test
-       @Override
-    public WeatherDTO getWeatherForWeek(Weather weather) {
-        WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
-        Set<TimeseriesDTO> timeseriesDTOList = new HashSet<>();
-        Set<String> daySet = new HashSet<>();
-        daySet.add(String.valueOf(LocalDate.now()));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(2)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(3)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(4)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(5)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(6)));
-
-        List<Timeseries> timeseries = weather.getProperties().getTimeseries();
-        timeseries.sort(Timeseries::compareTo);
-        daySet.forEach(day -> timeseries
-                .stream()
-                .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                .map(timeseries1 -> {
-                    DataDTO dataDAO = new DataDTO();
-                    dataDAO.setTime(timeseries1.getTime().substring(11));
-                    dataDAO.setDetails(new DetailsDTO(
-                            timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
-                            timeseries1.getData().getInstant().getDetails().getAirTemperature(),
-                            timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
-                            timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
-                            timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
-                            timeseries1.getData().getInstant().getDetails().getWindSpeed()));
-                    TimeseriesDTO timeseriesDAO = new TimeseriesDTO();
-                    timeseriesDAO.setDate(timeseries1.getTime().substring(0, 10));
-                    timeseriesDAO.setData(dataDAO);
-                    timeseriesDTOList.add(timeseriesDAO);
-                    return timeseriesDAO;
-                }).collect(Collectors.toSet()));
-        List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOList);
-        timeseriesDTO.sort(TimeseriesDTO::compareTo);
-        weatherDAO.getProperties().setTimeseries(timeseriesDTO);
-        return weatherDAO;
-
-    }*/
     @Override
     public WeatherDTO getWeatherForWeek(Weather weather) {
         WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
         Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
+
         Set<String> daySet = new HashSet<>();
-        log.info("Preparing weather for {}, {} for next 7 days",weather.getGeometry().getCoordinates().get(1),weather.getGeometry().getCoordinates().get(0));
         daySet.add(String.valueOf(LocalDate.now()));
         daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
         daySet.add(String.valueOf(LocalDate.now().plusDays(2)));
@@ -197,7 +154,7 @@ public class WeatherServiceImpl implements WeatherService {
         daySet.add(String.valueOf(LocalDate.now().plusDays(4)));
         daySet.add(String.valueOf(LocalDate.now().plusDays(5)));
         daySet.add(String.valueOf(LocalDate.now().plusDays(6)));
-
+        log.info("Preparing weather for {}, {} for next 7 days", weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
         daySet.forEach(day -> {
             List<DataDTO> dataDTOList = timeseries
@@ -226,7 +183,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public List<Weather> getWeatherList() {
-        return weatherRepository.findAll();
+        return Optional.of(weatherRepository.findAll()).orElseThrow(() -> new NotFoundException(DB_CONNECTION_PROBLEM));
     }
 
     @Override
