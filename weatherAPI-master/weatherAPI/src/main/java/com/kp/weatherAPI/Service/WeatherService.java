@@ -19,7 +19,7 @@ public interface WeatherService {
 
     Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) throws IOException;
 
-    Weather newWeatherOrder(Double lat, Double lon);
+    WeatherDTO newWeatherOrder(Double lat, Double lon);
 
     WeatherDTO getWeatherForWeek(Weather weather);
 

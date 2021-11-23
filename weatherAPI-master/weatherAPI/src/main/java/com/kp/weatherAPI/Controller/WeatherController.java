@@ -28,29 +28,12 @@ public class WeatherController {
     private final static String WEATHER_LIST = "/list";
 
 
-    @ApiOperation(value = "Get weather forecast list",
-            notes = "Showing weather for every location stored in database",
-            response = Weather.class)
-    @GetMapping(WEATHER_LIST)
-    public List<WeatherDTO> getWeatherList() {
-        log.info("Getting weather from every location saved in database");
-        return weatherService.getWeatherListForIncomingDays();
-    }
-
     @ApiOperation(value = "Post new weather location",
             notes = "Post new weather forecastlocation based on lat and lon geometry parameters")
     @PostMapping(WEATHER_NEW)
-    Weather newWeatherOrder(@ApiParam(value = "Value of latitude for the location - required", example = "90.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude for the location - required", example = "90.0") @RequestParam Double lon) {
+    WeatherDTO newWeatherOrder(@ApiParam(value = "Value of latitude for the location - required", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude for the location - required", example = "19.0") @RequestParam Double lon) {
         log.info("Passing lat and lon parameters to trigger POSTMAPPING save new weather location");
         return weatherService.newWeatherOrder(lat, lon);
-    }
-
-    @ApiOperation(value = "Get weather forecast by geometry values",
-            notes = "Getting weather forecast for location stored in database by lat and lon geometry parameters")
-    @GetMapping(WEATHER_FIND)
-    public WeatherDTO getWeatherByGeo(@ApiParam(value = "Value of latitude - required", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude - required", example = "19.0") @RequestParam Double lon) {
-        log.info("Get weather by lat lon or throw WeatherNotFoundException");
-        return weatherService.getWeatherByGeometry(lat, lon);
     }
 
     @ApiOperation(value = "Put weather forecast",
@@ -60,6 +43,23 @@ public class WeatherController {
     public void updateWeather() {
         log.info("getting every location and updating weather forecast");
         weatherService.updateAll();
+    }
+
+    @ApiOperation(value = "Get weather forecast list",
+            notes = "Showing weather for every location stored in database",
+            response = Weather.class)
+    @GetMapping(WEATHER_LIST)
+    public List<WeatherDTO> getWeatherList() {
+        log.info("Getting weather from every location saved in database");
+        return weatherService.getWeatherListForIncomingDays();
+    }
+
+    @ApiOperation(value = "Get weather forecast by geometry values",
+            notes = "Getting weather forecast for location stored in database by lat and lon geometry parameters")
+    @GetMapping(WEATHER_FIND)
+    public WeatherDTO getWeatherByGeo(@ApiParam(value = "Value of latitude - required", example = "50.0") @RequestParam Double lat, @ApiParam(value = "Value of longitude - required", example = "19.0") @RequestParam Double lon) {
+        log.info("Get weather by lat lon or throw WeatherNotFoundException");
+        return weatherService.getWeatherByGeometry(lat, lon);
     }
 
     @ApiOperation(value = "Delete location by geometry values",
