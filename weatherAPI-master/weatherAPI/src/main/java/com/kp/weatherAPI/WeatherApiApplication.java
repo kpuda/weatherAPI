@@ -5,23 +5,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -69,4 +62,5 @@ public class WeatherApiApplication {
                 Collections.emptyList()
         );
     }
+
 }
