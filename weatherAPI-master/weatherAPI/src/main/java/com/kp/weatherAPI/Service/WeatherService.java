@@ -6,6 +6,7 @@ import com.kp.weatherAPI.Entity.Weather;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 
@@ -21,13 +22,15 @@ public interface WeatherService {
 
     WeatherDTO newWeatherOrder(Double lat, Double lon);
 
+    Set<String> getIncomingDates();
+
     WeatherDTO getWeatherForWeek(Weather weather);
 
     List<WeatherDTO> getWeatherListForIncomingDays();
 
     List<Weather> getWeatherList();
 
-    Future<List<Weather>> updateAsync();
+    Future<List<Weather>> updateWeatherAsync();
 
     Boolean validateGeometryCompatibility(Double lat, Double lon);
 

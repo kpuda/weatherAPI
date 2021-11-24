@@ -10,10 +10,10 @@ import com.kp.weatherAPI.Repository.WeatherRepository;
 import com.kp.weatherAPI.Service.WeatherService;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +34,6 @@ public class WeatherServiceImpl implements WeatherService {
     private final WeatherRepository weatherRepository;
     private final TimeseriesServiceImpl timeseriesService;
     private final GeometryServiceImpl geometryService;
-    private final ModelMapper modelMapper;
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private final static String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
@@ -58,7 +57,7 @@ public class WeatherServiceImpl implements WeatherService {
     @Scheduled(fixedRateString = "PT30M")
     public void updateAll() {
         log.info("Started scheduled updateAll()");
-        Future<List<Weather>> weatherList = updateAsync();
+        Future<List<Weather>> weatherList = updateWeatherAsync();
         if (!weatherList.isDone()) {
             log.info("Async failed.");
         } else {
@@ -69,7 +68,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     @Async("autoWeatherUpdate")
-    public Future<List<Weather>> updateAsync() {
+    public Future<List<Weather>> updateWeatherAsync() {
         List<Weather> weatherList = getWeatherList();
         log.info("Getting weather list.");
         List<Weather> refreshedWeatherList = new ArrayList<>();
@@ -86,13 +85,6 @@ public class WeatherServiceImpl implements WeatherService {
             );
         });
         return AsyncResult.forValue(refreshedWeatherList);
-    }
-
-    @Override
-    public Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList) {
-        return weatherList.stream()
-                .filter(weather -> weather.getGeometry().getCoordinates().get(1).equals(lat) && weather.getGeometry().getCoordinates().get(0).equals(lon))
-                .findFirst().get();
     }
 
     @SneakyThrows
@@ -119,15 +111,6 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public Boolean validateGeometryCompatibility(Double lat, Double lon) {
-        if (lat <= 90 && lat >= -90 && lon <= 180 && lon >= -180) {
-            return true;
-        } else
-            throw new ValuesOutOfBoundsException(LAT_LON_OUT_BOUNDS);
-    }
-
-    // TODO UNDER TESTING
-    @Override
     public WeatherDTO getWeatherByGeometry(double lat, double lon) {
         log.info("Returning weather entity if exists");
         Weather weather = weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
@@ -137,39 +120,27 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public List<WeatherDTO> getWeatherListForIncomingDays() {
-        return getWeatherList().stream().map(this::getWeatherForWeek).collect(Collectors.toList());
-    }
-
-    @Override
     public WeatherDTO getWeatherForWeek(Weather weather) {
-        WeatherDTO weatherDAO = modelMapper.map(weather, WeatherDTO.class);
+        WeatherDTO weatherDTO = convertToDTO(weather);
         Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
-
-        Set<String> daySet = new HashSet<>();
-        daySet.add(String.valueOf(LocalDate.now()));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(1)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(2)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(3)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(4)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(5)));
-        daySet.add(String.valueOf(LocalDate.now().plusDays(6)));
+        Set<String> daySet = getIncomingDates();
         log.info("Preparing weather for {}, {} for next 7 days", weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
+
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
         daySet.forEach(day -> {
             List<DataDTO> dataDTOList = timeseries
                     .stream()
-                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                    .map(timeseries1 -> {
+                    .filter(timeseriesObject -> timeseriesObject.getTime().substring(0, 10).equals(day))
+                    .map(timeseriesObject -> {
                         DataDTO dataDTO = new DataDTO();
-                        dataDTO.setTime(timeseries1.getTime().substring(11));
+                        dataDTO.setTime(timeseriesObject.getTime().substring(11));
                         dataDTO.setDetails(new DetailsDTO(
-                                timeseries1.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
-                                timeseries1.getData().getInstant().getDetails().getAirTemperature(),
-                                timeseries1.getData().getInstant().getDetails().getCloudAreaFraction(),
-                                timeseries1.getData().getInstant().getDetails().getRelativeHumidity(),
-                                timeseries1.getData().getInstant().getDetails().getWindFromDirection(),
-                                timeseries1.getData().getInstant().getDetails().getWindSpeed()
+                                timeseriesObject.getData().getInstant().getDetails().getAirPressureAtSeaLevel(),
+                                timeseriesObject.getData().getInstant().getDetails().getAirTemperature(),
+                                timeseriesObject.getData().getInstant().getDetails().getCloudAreaFraction(),
+                                timeseriesObject.getData().getInstant().getDetails().getRelativeHumidity(),
+                                timeseriesObject.getData().getInstant().getDetails().getWindFromDirection(),
+                                timeseriesObject.getData().getInstant().getDetails().getWindSpeed()
                         ));
                         return dataDTO;
                     }).collect(Collectors.toList());
@@ -177,14 +148,10 @@ public class WeatherServiceImpl implements WeatherService {
         });
         List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOSet);
         timeseriesDTO.sort(TimeseriesDTO::compareTo);
-        weatherDAO.getProperties().setTimeseries(timeseriesDTO);
-        return weatherDAO;
+        weatherDTO.getProperties().setTimeseries(timeseriesDTO);
+        return weatherDTO;
     }
 
-    @Override
-    public List<Weather> getWeatherList() {
-        return Optional.of(weatherRepository.findAll()).orElseThrow(() -> new NotFoundException(DB_CONNECTION_PROBLEM));
-    }
 
     @Override
     public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) {
@@ -205,4 +172,65 @@ public class WeatherServiceImpl implements WeatherService {
         );
     }
 
+    @Override
+    public List<Weather> getWeatherList() {
+        return Optional.of(weatherRepository.findAll()).orElseThrow(() -> new NotFoundException(DB_CONNECTION_PROBLEM));
+    }
+
+    @Override
+    public Weather getWeatherFromList(double lat, double lon, List<Weather> weatherList) {
+        return weatherList.stream()
+                .filter(weather -> weather.getGeometry().getCoordinates().get(1).equals(lat) && weather.getGeometry().getCoordinates().get(0).equals(lon))
+                .findFirst().get();
+    }
+
+    @Override
+    public List<WeatherDTO> getWeatherListForIncomingDays() {
+        return getWeatherList().stream().map(this::getWeatherForWeek).collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<String> getIncomingDates() {
+        Set<String> incomingDays = new HashSet<>();
+        incomingDays.add(String.valueOf(LocalDate.now()));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(1)));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(2)));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(3)));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(4)));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(5)));
+        incomingDays.add(String.valueOf(LocalDate.now().plusDays(6)));
+        return incomingDays;
+    }
+
+    @Override
+    public Boolean validateGeometryCompatibility(Double lat, Double lon) {
+        if (lat <= 90 && lat >= -90 && lon <= 180 && lon >= -180) {
+            return true;
+        } else
+            throw new ValuesOutOfBoundsException(LAT_LON_OUT_BOUNDS);
+    }
+
+    private WeatherDTO convertToDTO(Weather weather) {
+        return new WeatherDTO(new GeometryDTO(
+                weather.getGeometry().getCoordinates().get(1),
+                weather.getGeometry().getCoordinates().get(0),
+                weather.getGeometry().getCoordinates().get(2)),
+                new PropertiesDTO());
+    }
+
+    //TODO under testing
+    public void webScrape(double lat, double lon) throws UnirestException {
+        String url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon;
+        HttpResponse<String> httpResponse = Unirest.post(url).header("Content-type", USER_AGENT).asString();
+        String word[] = httpResponse.getBody().split(" ");
+        String city = word[11].substring(0, word[11].length() - 1);
+        int words = httpResponse.getBody().compareTo("city");
+        char c = httpResponse.getBody().charAt(words);
+        System.out.println(words + ", " + c);
+        //String voivodeship = word[13].substring(0, word[13].length() - 1);
+        List<String> scrapedData = new ArrayList<>();
+        scrapedData.add(city);
+        // scrapedData.add(voivodeship);
+
+    }
 }
