@@ -1,12 +1,14 @@
 package com.kp.weatherAPI.Service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kp.weatherAPI.EntityDTO.*;
 import com.kp.weatherAPI.Entity.Timeseries;
 import com.kp.weatherAPI.Entity.Weather;
+import com.kp.weatherAPI.EntityDTO.*;
 import com.kp.weatherAPI.Exceptions.NotFoundException;
 import com.kp.weatherAPI.Exceptions.ValuesOutOfBoundsException;
 import com.kp.weatherAPI.Repository.WeatherRepository;
+import com.kp.weatherAPI.Service.GeometryService;
+import com.kp.weatherAPI.Service.TimeseriesService;
 import com.kp.weatherAPI.Service.WeatherService;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -14,27 +16,25 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-
 public class WeatherServiceImpl implements WeatherService {
 
     private final WeatherRepository weatherRepository;
-    private final TimeseriesServiceImpl timeseriesService;
-    private final GeometryServiceImpl geometryService;
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+    private final TimeseriesService timeseriesService;
+    private final GeometryService geometryService;
+    private final ObjectMapper objectMapper;
     private final static String GEOMETRY_NOT_FOUND = "Weather doesn't exists.";
     private final static String WEATHER_API_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=";
     private final static String USER_AGENT = "user-agent";
@@ -55,20 +55,15 @@ public class WeatherServiceImpl implements WeatherService {
     @Transactional
     @Override
     @Scheduled(fixedRateString = "PT30M")
-    public void updateAll() {
+    @Async("autoWeatherUpdate")
+    public HttpStatus updateAll() {
         log.info("Started scheduled updateAll()");
-        Future<List<Weather>> weatherList = updateWeatherAsync();
-        if (!weatherList.isDone()) {
-            log.info("Async failed.");
-        } else {
-            log.info("Saving the updated list. Scheduled ended.");
-            weatherRepository.saveAll(weatherList.get());
-        }
+        updateWeatherAsync();
+        return HttpStatus.ACCEPTED;
     }
 
     @Override
-    @Async("autoWeatherUpdate")
-    public Future<List<Weather>> updateWeatherAsync() {
+    public void updateWeatherAsync() {
         List<Weather> weatherList = getWeatherList();
         log.info("Getting weather list.");
         List<Weather> refreshedWeatherList = new ArrayList<>();
@@ -84,7 +79,7 @@ public class WeatherServiceImpl implements WeatherService {
                     compareTimeseriesData(refreshedWeatherData, oldWeatherData)
             );
         });
-        return AsyncResult.forValue(refreshedWeatherList);
+        weatherRepository.saveAll(refreshedWeatherList);
     }
 
     @SneakyThrows
@@ -114,7 +109,7 @@ public class WeatherServiceImpl implements WeatherService {
     public WeatherDTO getWeatherByGeometry(double lat, double lon) {
         log.info("Returning weather entity if exists");
         Weather weather = weatherRepository.findById(geometryService.validateIfGeometryByIdExists(
-                        geometryService.getGeometryIdByLatLon(lat, lon)))
+                geometryService.getGeometryIdByLatLon(lat, lon)))
                 .orElseThrow(() -> new NotFoundException(GEOMETRY_NOT_FOUND));
         return getWeatherForWeek(weather);
     }
@@ -124,6 +119,7 @@ public class WeatherServiceImpl implements WeatherService {
         WeatherDTO weatherDTO = convertToDTO(weather);
         Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
         Set<String> daySet = getIncomingDates();
+        List<String> avgTemp = new ArrayList<>();
         log.info("Preparing weather for {}, {} for next 7 days", weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
 
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
@@ -146,8 +142,43 @@ public class WeatherServiceImpl implements WeatherService {
                     }).collect(Collectors.toList());
             timeseriesDTOSet.add(new TimeseriesDTO(day, dataDTOList));
         });
+
+
         List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOSet);
         timeseriesDTO.sort(TimeseriesDTO::compareTo);
+
+    /*    for (String day : daySet) {
+            OptionalDouble averageMorning = timeseries
+                    .stream()
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 7)
+                    .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
+            timeseries.stream().filter(time->time.getTime().substring(0,10).equals(day)).map(timeseries1 -> timeseries1.setAvgMorningTemp(averageMorning)).findFirst();
+            OptionalDouble averageNoon = timeseries
+                    .stream()
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 6 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 13)
+                    .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
+            OptionalDouble averageAfterNoon = timeseries
+                    .stream()
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 12 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 19)
+                    .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
+            OptionalDouble averageEvening = timeseries
+                    .stream()
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 17 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 25)
+                    .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
+            BigDecimal bigAfterNoon = new BigDecimal(averageAfterNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigNoon = new BigDecimal(averageNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigEvening = new BigDecimal(averageEvening.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigMorning = new BigDecimal(averageMorning.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            log.info("Avg Morning : {}", bigMorning);
+            log.info("Avg Noon : {}", bigNoon);
+            log.info("Avg Afternoon : {}", bigAfterNoon);
+            log.info("Avg Evening : {}", bigEvening);
+            avgTemp.add(String.valueOf(bigMorning));
+            avgTemp.add(String.valueOf(bigNoon));
+            avgTemp.add(String.valueOf(bigAfterNoon));
+            avgTemp.add(String.valueOf(bigEvening));
+        }
+*/
         weatherDTO.getProperties().setTimeseries(timeseriesDTO);
         return weatherDTO;
     }

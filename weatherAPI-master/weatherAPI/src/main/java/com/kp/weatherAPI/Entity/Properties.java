@@ -2,14 +2,12 @@
 package com.kp.weatherAPI.Entity;
 
 
-import java.util.List;
-
-import javax.persistence.*;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,6 +25,6 @@ public class Properties {
 
     @OneToMany(targetEntity = Timeseries.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "properties_id", referencedColumnName = "propertiesId")
-    private List<Timeseries> timeseries = null;
+    private List<Timeseries> timeseries;
 
 }

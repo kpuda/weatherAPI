@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.builders.PathSelectors;
@@ -22,7 +23,10 @@ import java.util.Collections;
 public class WeatherApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WeatherApiApplication.class, args);
+        ConfigurableApplicationContext run = SpringApplication.run(WeatherApiApplication.class, args);
+        for(String s : run.getBeanDefinitionNames()){
+            System.out.println("Y "+s);
+        }
     }
 
     @Bean

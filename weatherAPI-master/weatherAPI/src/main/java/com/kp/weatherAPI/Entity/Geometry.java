@@ -1,14 +1,13 @@
 
 package com.kp.weatherAPI.Entity;
 
-import java.util.List;
-
-import javax.persistence.*;
-
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,6 +24,7 @@ public class Geometry {
 
     @ElementCollection
     @CollectionTable(name = "geometryCoordinates")
-    private List<Double> coordinates = null;
+    private List<Double> coordinates;
+
 
 }

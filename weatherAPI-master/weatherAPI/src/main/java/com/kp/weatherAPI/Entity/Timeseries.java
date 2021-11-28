@@ -1,11 +1,12 @@
 
 package com.kp.weatherAPI.Entity;
 
-import javax.persistence.*;
-
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.OptionalDouble;
 
 @Entity
 @lombok.Data
@@ -23,6 +24,9 @@ public class Timeseries implements Comparable<Timeseries> {
 
     @Embedded
     private Data data;
+
+    @Transient
+    private OptionalDouble avgMorningTemp;
 
     @Override
     public int compareTo(Timeseries o) {

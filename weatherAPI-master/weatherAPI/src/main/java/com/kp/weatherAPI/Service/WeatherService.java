@@ -3,11 +3,11 @@ package com.kp.weatherAPI.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kp.weatherAPI.EntityDTO.WeatherDTO;
 import com.kp.weatherAPI.Entity.Weather;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 
 public interface WeatherService {
@@ -30,13 +30,13 @@ public interface WeatherService {
 
     List<Weather> getWeatherList();
 
-    Future<List<Weather>> updateWeatherAsync();
+    void updateWeatherAsync() throws InterruptedException;
 
     Boolean validateGeometryCompatibility(Double lat, Double lon);
 
     void weatherSave(Weather weather);
 
-    void updateAll();
+    HttpStatus updateAll();
 
     void deleteWeatherByGeometry(Double lat, Double lon);
 }

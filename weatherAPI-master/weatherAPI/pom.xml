@@ -136,6 +136,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+			<version>1.18.22</version>
 		</dependency>
 
 		<!--JSON-->
@@ -156,6 +157,7 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<version>${maven.plugin.version}</version>
 				<groupId>org.springframework.boot</groupId>
