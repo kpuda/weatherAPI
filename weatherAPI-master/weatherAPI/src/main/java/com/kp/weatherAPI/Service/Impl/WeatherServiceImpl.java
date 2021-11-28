@@ -22,6 +22,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,7 +121,7 @@ public class WeatherServiceImpl implements WeatherService {
         WeatherDTO weatherDTO = convertToDTO(weather);
         Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
         Set<String> daySet = getIncomingDates();
-        List<String> avgTemp = new ArrayList<>();
+        Map<String, List<String>> avgTemp = new TreeMap<>();
         log.info("Preparing weather for {}, {} for next 7 days", weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
 
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
@@ -143,46 +145,54 @@ public class WeatherServiceImpl implements WeatherService {
             timeseriesDTOSet.add(new TimeseriesDTO(day, dataDTOList));
         });
 
-
         List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOSet);
         timeseriesDTO.sort(TimeseriesDTO::compareTo);
 
-    /*    for (String day : daySet) {
+        for (String day : daySet) {
             OptionalDouble averageMorning = timeseries
                     .stream()
+                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
                     .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 7)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
-            timeseries.stream().filter(time->time.getTime().substring(0,10).equals(day)).map(timeseries1 -> timeseries1.setAvgMorningTemp(averageMorning)).findFirst();
             OptionalDouble averageNoon = timeseries
                     .stream()
+                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
                     .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 6 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 13)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             OptionalDouble averageAfterNoon = timeseries
                     .stream()
+                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
                     .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 12 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 19)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             OptionalDouble averageEvening = timeseries
                     .stream()
+                    .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
                     .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 17 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 25)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             BigDecimal bigAfterNoon = new BigDecimal(averageAfterNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
             BigDecimal bigNoon = new BigDecimal(averageNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
             BigDecimal bigEvening = new BigDecimal(averageEvening.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
             BigDecimal bigMorning = new BigDecimal(averageMorning.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
-            log.info("Avg Morning : {}", bigMorning);
-            log.info("Avg Noon : {}", bigNoon);
-            log.info("Avg Afternoon : {}", bigAfterNoon);
-            log.info("Avg Evening : {}", bigEvening);
-            avgTemp.add(String.valueOf(bigMorning));
-            avgTemp.add(String.valueOf(bigNoon));
-            avgTemp.add(String.valueOf(bigAfterNoon));
-            avgTemp.add(String.valueOf(bigEvening));
+
+            avgTemp.put(day, List.of(
+                    String.valueOf(bigMorning),
+                    String.valueOf(bigNoon),
+                    String.valueOf(bigAfterNoon),
+                    String.valueOf(bigEvening)
+            ));
         }
-*/
+        for (TimeseriesDTO time : timeseriesDTO) {
+            if (avgTemp.containsKey(time.getDate())) {
+                time.setAvgTemperatureMorning(Double.parseDouble(avgTemp.get(time.getDate()).get(0)));
+                time.setAvgTemperatureNoon(Double.parseDouble(avgTemp.get(time.getDate()).get(1)));
+                time.setAvgTemperatureAfterNoon(Double.parseDouble(avgTemp.get(time.getDate()).get(2)));
+                time.setAvgTemperatureEvening(Double.parseDouble(avgTemp.get(time.getDate()).get(3)));
+            }
+        }
+
         weatherDTO.getProperties().setTimeseries(timeseriesDTO);
         return weatherDTO;
     }
-
 
     @Override
     public Weather compareTimeseriesData(Weather refreshedWeatherData, Weather oldWeatherData) {

@@ -13,7 +13,20 @@ public class TimeseriesDTO {
 
     private String date;
 
+    private Double avgTemperatureMorning;
+
+    private Double avgTemperatureNoon;
+
+    private Double avgTemperatureAfterNoon;
+
+    private Double avgTemperatureEvening;
+
     private List<DataDTO> data;
+
+    public TimeseriesDTO(String date, List<DataDTO> data) {
+        this.date = date;
+        this.data = data;
+    }
 
     public int compareTo(TimeseriesDTO o) {
         return this.getDate().substring(8).compareTo(o.getDate().substring(8));
