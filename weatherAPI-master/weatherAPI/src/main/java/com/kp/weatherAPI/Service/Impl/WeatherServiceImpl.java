@@ -121,7 +121,6 @@ public class WeatherServiceImpl implements WeatherService {
         WeatherDTO weatherDTO = convertToDTO(weather);
         Set<TimeseriesDTO> timeseriesDTOSet = new HashSet<>();
         Set<String> daySet = getIncomingDates();
-        Map<String, List<String>> avgTemp = new TreeMap<>();
         log.info("Preparing weather for {}, {} for next 7 days", weather.getGeometry().getCoordinates().get(1), weather.getGeometry().getCoordinates().get(0));
 
         List<Timeseries> timeseries = weather.getProperties().getTimeseries();
@@ -148,6 +147,15 @@ public class WeatherServiceImpl implements WeatherService {
         List<TimeseriesDTO> timeseriesDTO = new ArrayList<>(timeseriesDTOSet);
         timeseriesDTO.sort(TimeseriesDTO::compareTo);
 
+        setAvgTemperatureForList(daySet, timeseriesDTO, timeseries);
+
+        weatherDTO.getProperties().setTimeseries(timeseriesDTO);
+        return weatherDTO;
+    }
+
+    public List<TimeseriesDTO> setAvgTemperatureForList(Set<String> daySet, List<TimeseriesDTO> timeseriesDTO, List<Timeseries> timeseries) {
+        Map<String, List<String>> avgTemp = new TreeMap<>();
+
         for (String day : daySet) {
             OptionalDouble averageMorning = timeseries
                     .stream()
@@ -169,10 +177,11 @@ public class WeatherServiceImpl implements WeatherService {
                     .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
                     .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 17 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 25)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
-            BigDecimal bigAfterNoon = new BigDecimal(averageAfterNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal bigNoon = new BigDecimal(averageNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal bigEvening = new BigDecimal(averageEvening.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal bigMorning = new BigDecimal(averageMorning.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+
+            BigDecimal bigAfterNoon = BigDecimal.valueOf(averageAfterNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigNoon = BigDecimal.valueOf(averageNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigEvening = BigDecimal.valueOf(averageEvening.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigMorning = BigDecimal.valueOf(averageMorning.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
 
             avgTemp.put(day, List.of(
                     String.valueOf(bigMorning),
@@ -189,9 +198,7 @@ public class WeatherServiceImpl implements WeatherService {
                 time.setAvgTemperatureEvening(Double.parseDouble(avgTemp.get(time.getDate()).get(3)));
             }
         }
-
-        weatherDTO.getProperties().setTimeseries(timeseriesDTO);
-        return weatherDTO;
+        return timeseriesDTO;
     }
 
     @Override
@@ -232,7 +239,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Set<String> getIncomingDates() {
-        Set<String> incomingDays = new HashSet<>();
+        Set<String> incomingDays = new TreeSet<>();
         incomingDays.add(String.valueOf(LocalDate.now()));
         incomingDays.add(String.valueOf(LocalDate.now().plusDays(1)));
         incomingDays.add(String.valueOf(LocalDate.now().plusDays(2)));
