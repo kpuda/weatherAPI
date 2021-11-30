@@ -12,8 +12,6 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfiguration implements AsyncConfigurer {
 
-
-    //TODO learn
     @Bean(name = "autoWeatherUpdate")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
