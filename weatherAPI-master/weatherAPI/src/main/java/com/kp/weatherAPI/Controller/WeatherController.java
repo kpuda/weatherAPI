@@ -11,8 +11,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class WeatherController {
+
 
     private final WeatherService weatherService;
     private final static String WEATHER_NEW = "/new";

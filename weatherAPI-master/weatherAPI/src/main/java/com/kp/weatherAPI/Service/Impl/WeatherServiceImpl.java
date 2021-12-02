@@ -12,7 +12,6 @@ import com.kp.weatherAPI.Service.TimeseriesService;
 import com.kp.weatherAPI.Service.WeatherService;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,9 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public void updateWeatherAsync() {
+    public void updateWeatherAsync() throws InterruptedException {
+        log.info("added thread.sleep to check if async works. IT WORKS!");
+        Thread.sleep(8000);
         List<Weather> weatherList = getWeatherList();
         log.info("Getting weather list.");
         List<Weather> refreshedWeatherList = new ArrayList<>();
@@ -160,22 +161,22 @@ public class WeatherServiceImpl implements WeatherService {
             OptionalDouble averageMorning = timeseries
                     .stream()
                     .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 7)
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) >= 1 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) <= 6)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             OptionalDouble averageNoon = timeseries
                     .stream()
                     .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 6 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 13)
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) >= 7 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) <= 12)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             OptionalDouble averageAfterNoon = timeseries
                     .stream()
                     .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 12 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 19)
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) >= 13 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) <= 18)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
             OptionalDouble averageEvening = timeseries
                     .stream()
                     .filter(timeseries1 -> timeseries1.getTime().substring(0, 10).equals(day))
-                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) > 17 && Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) < 25)
+                    .filter(timeseriesObject -> Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) >= 19 || Integer.parseInt(timeseriesObject.getTime().substring(11, 13)) == 0)
                     .mapToDouble(timeseriesObject -> timeseriesObject.getData().getInstant().getDetails().getAirTemperature()).average();
 
             BigDecimal bigAfterNoon = BigDecimal.valueOf(averageAfterNoon.getAsDouble()).setScale(2, RoundingMode.HALF_UP);
@@ -264,21 +265,5 @@ public class WeatherServiceImpl implements WeatherService {
                 weather.getGeometry().getCoordinates().get(0),
                 weather.getGeometry().getCoordinates().get(2)),
                 new PropertiesDTO());
-    }
-
-    //TODO under testing
-    public void webScrape(double lat, double lon) throws UnirestException {
-        String url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon;
-        HttpResponse<String> httpResponse = Unirest.post(url).header("Content-type", USER_AGENT).asString();
-        String word[] = httpResponse.getBody().split(" ");
-        String city = word[11].substring(0, word[11].length() - 1);
-        int words = httpResponse.getBody().compareTo("city");
-        char c = httpResponse.getBody().charAt(words);
-        System.out.println(words + ", " + c);
-        //String voivodeship = word[13].substring(0, word[13].length() - 1);
-        List<String> scrapedData = new ArrayList<>();
-        scrapedData.add(city);
-        // scrapedData.add(voivodeship);
-
     }
 }
